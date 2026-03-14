@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTC Quiz – English</title>
+<title>TTC Quiz – Grammar</title>
  
 <link href="https://fonts.googleapis.com/css2?family=Righteous&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -41,7 +41,6 @@ body {
  
 .app { width: 430px; max-width: 95vw; }
  
-/* ── Screens ── */
 .screen { display: none; }
 .screen.active {
   display: block;
@@ -52,7 +51,6 @@ body {
   to   { opacity: 1; transform: scale(1)    translateY(0); }
 }
  
-/* ── Card ── */
 .card {
   background: var(--white);
   border: 3px solid var(--dark);
@@ -71,7 +69,6 @@ body {
   background: linear-gradient(90deg, var(--blue), var(--pink), var(--orange), var(--lime));
 }
  
-/* ── Logo ── */
 .logo {
   width: 72px; height: 72px;
   object-fit: contain;
@@ -84,7 +81,6 @@ body {
   margin-right: auto;
 }
  
-/* ── Chip ── */
 .chip {
   display: inline-block;
   background: var(--lime);
@@ -100,7 +96,6 @@ body {
   margin-bottom: 14px;
 }
  
-/* ── Type ── */
 h2 {
   font-family: 'Righteous', cursive;
   font-size: 28px;
@@ -110,7 +105,6 @@ h2 {
 }
 p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20px; }
  
-/* ── Input ── */
 .input-field {
   width: 100%;
   padding: 13px 16px;
@@ -132,7 +126,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
 }
 .input-field::placeholder { color: #aaa; font-weight: 500; }
  
-/* ── Buttons ── */
 .btn {
   display: inline-block;
   width: 100%;
@@ -162,7 +155,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
 }
 .btn-ghost:hover { border-color: var(--dark); color: var(--dark); box-shadow: 4px 4px 0 var(--dark); }
  
-/* ── Info pills ── */
 .info-strip {
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 8px;
@@ -175,7 +167,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   color: var(--dark); box-shadow: 2px 2px 0 var(--dark);
 }
  
-/* ── Progress ── */
 .progress-wrap { margin-bottom: 22px; }
 .progress-meta {
   display: flex; justify-content: space-between;
@@ -194,7 +185,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   transition: width 0.5s cubic-bezier(.34,1.2,.64,1);
 }
  
-/* ── Question ── */
 .question-text {
   font-family: 'Righteous', cursive;
   font-size: 20px; color: var(--dark);
@@ -202,7 +192,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   min-height: 60px; text-align: left;
 }
  
-/* ── Options ── */
 .options-grid { display: flex; flex-direction: column; gap: 10px; text-align: left; }
  
 .option {
@@ -249,7 +238,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
 }
 .option.wrong .option-letter { background: var(--pink); border-color: var(--pink); color: white; }
  
-/* ── Explanation ── */
 .expl-box {
   display: none; margin-top: 16px;
   background: #FFFBE6; border: 2.5px solid var(--orange);
@@ -265,7 +253,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   text-transform: uppercase; display: block; margin-bottom: 4px;
 }
  
-/* ── Score ── */
 .score-block { margin: 10px 0 18px; }
 .score-number {
   font-family: 'Righteous', cursive; font-size: 76px;
@@ -280,7 +267,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   border: 2px solid var(--dark); box-shadow: 2px 2px 0 var(--dark);
 }
  
-/* ── Feedback box ── */
 .fb-box {
   background: var(--off); border: 2.5px solid var(--dark);
   border-radius: 16px; padding: 16px; margin: 14px 0;
@@ -293,7 +279,6 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
 }
 .fb-box p { font-size: 13px; color: var(--grey); margin: 0; font-weight: 600; line-height: 1.5; }
  
-/* ── Divider ── */
 .divider {
   display: flex; align-items: center; gap: 12px;
   margin: 22px 0; color: var(--grey);
@@ -305,13 +290,11 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
   background: var(--light); border-radius: 2px;
 }
  
-/* ── Reviews head ── */
 .rev-head { margin-bottom: 16px; }
 .rev-head .r-emoji { font-size: 28px; margin-bottom: 8px; }
 .rev-head h3 { font-family: 'Righteous', cursive; font-size: 22px; color: var(--dark); margin-bottom: 4px; }
 .rev-head p { font-size: 12px; font-weight: 600; color: var(--grey); }
  
-/* ── Burst particles ── */
 .sburst {
   position: absolute; font-size: 14px;
   pointer-events: none;
@@ -350,8 +333,8 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
       <h2 id="welcomeText"></h2>
       <p class="sub">Ready to prove yourself? 💪</p>
       <div class="info-strip">
-        <div class="info-pill">📖 English – Mixed</div>
-        <div class="info-pill">35 Questions</div>
+        <div class="info-pill">📝 English – Grammar</div>
+        <div class="info-pill">40 Questions</div>
         <div class="info-pill">🏆 Scored</div>
         <div class="info-pill">⏱ Self-paced</div>
       </div>
@@ -366,7 +349,7 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
  
       <div class="progress-wrap">
         <div class="progress-meta">
-          <span id="qCounter">Q 1 / 35</span>
+          <span id="qCounter">Q 1 / 40</span>
           <span id="qScore">Score: 0</span>
         </div>
         <div class="progress-track">
@@ -398,7 +381,7 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
       <div class="score-block">
         <div>
           <span class="score-number" id="scoreNum">0</span>
-          <span class="score-denom" id="scoreDenom">/35</span>
+          <span class="score-denom" id="scoreDenom">/40</span>
         </div>
         <div class="score-pct" id="scorePct">0%</div>
       </div>
@@ -442,218 +425,333 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
  
 <script>
 const subjectName = "English"
-const chapterName = "Mixed"
+const chapterName = "Grammar"
  
 const quizData = [
   {
-    question: "Who said the phrase, \"Only six hundred pieces of silver\"?",
-    options: ["The merchant","The slave dealer","The merchant's wife","Kafur"],
-    correct: "The slave dealer",
-    explanation: "The slave dealer stated this price to the merchant when offering him for sale."
+    question: "Complete the sentence: I heard the news about the flood ___ television.",
+    options: ["in", "on", "with", "by"],
+    correct: "on",
+    explanation: "We use \"on\" for electronic media like television and radio, not \"in\"."
   },
   {
-    question: "According to the slave dealer, how often does Kafur tell a lie?",
-    options: ["One lie a day","One lie a month","One lie a year","He never lies"],
-    correct: "One lie a year",
-    explanation: "The slave dealer warned the merchant that Kafur always tells one lie a year."
+    question: "Choose the correct preposition: The boy dived ___ the pool.",
+    options: ["in", "from", "into", "at"],
+    correct: "into",
+    explanation: "\"Into\" indicates movement toward the inside of something, which is appropriate for diving."
   },
   {
-    question: "Who said, \"Come Kafur and help me mourn\"?",
-    options: ["The merchant","The slave dealer","The merchant's wife","The villagers"],
-    correct: "The merchant's wife",
-    explanation: "The merchant's wife called upon Kafur to help her mourn."
+    question: "Identify the correct preposition: ___ Nitin, everyone apart from Sanjay enjoyed the play.",
+    options: ["Because of", "According to", "Ahead of", "Along with"],
+    correct: "According to",
+    explanation: "The sentence requires a compound preposition that means \"as stated by\", which is \"According to\"."
   },
   {
-    question: "What did the merchant love doing in the market?",
-    options: ["Selling goods","Gossiping","Bargaining","Buying jewelry"],
-    correct: "Bargaining",
-    explanation: "The merchant loved to bargain."
+    question: "Complete the sentence: I have brought muffins ___ fruit and lemonade.",
+    options: ["because of", "in front of", "in addition to", "apart from"],
+    correct: "in addition to",
+    explanation: "The context implies bringing extra items, so \"in addition to\" is the correct compound preposition."
   },
   {
-    question: "Who had two daughters from her first marriage?",
-    options: ["Cinderella's mother","Cinderella's stepmother","Cinderella's fairy godmother","Cinderella's aunt"],
-    correct: "Cinderella's stepmother",
-    explanation: "Cinderella's stepmother had two daughters from her first marriage who were ugly and jealous."
+    question: "Choose the correct preposition: The thief crept in through the window late ___ night.",
+    options: ["in", "at", "by", "on"],
+    correct: "at",
+    explanation: "While we say \"in the morning\", the correct prepositional phrase for nighttime is \"at night\"."
   },
   {
-    question: "Who advised Cinderella to come back home before midnight?",
-    options: ["Her father","Her stepmother","Her stepsisters","Her fairy godmother"],
-    correct: "Her fairy godmother",
-    explanation: "Her fairy godmother advised Cinderella to return before midnight."
+    question: "Complete the sentence: We entered the cinema ___ the climax.",
+    options: ["at the point of", "ahead of", "because of", "along with"],
+    correct: "at the point of",
+    explanation: "The sentence refers to a specific moment in time during an event, making \"at the point of\" the correct choice."
   },
   {
-    question: "What were the horses and dog turned into for Cinderella's carriage?",
-    options: ["Footmen","Attendants","Drivers","Guards"],
-    correct: "Attendants",
-    explanation: "The horses and a dog were turned into attendants."
+    question: "Choose the correct preposition: You have to complete these sums ___ an hour.",
+    options: ["in", "on", "at", "from"],
+    correct: "in",
+    explanation: "\"In\" is used to specify a period of time within which something must be done."
   },
   {
-    question: "What responsibility was Amit appointed to, which made his parents feel proud and happy?",
-    options: ["Class Monitor","Sports Captain","Discipline Incharge","Head Boy"],
-    correct: "Discipline Incharge",
-    explanation: "Amit was appointed as the discipline incharge."
+    question: "Complete the sentence: We won the quiz competition ___ your hard work and preparation.",
+    options: ["apart from", "according to", "because of", "different from"],
+    correct: "because of",
+    explanation: "\"Because of\" correctly indicates the reason for winning the competition."
   },
   {
-    question: "What was Amit supposed to do when a teacher was not present in the classroom?",
-    options: ["Take attendance","Make sure the students remained quiet","Teach the lesson","Collect homework"],
-    correct: "Make sure the students remained quiet",
-    explanation: "Amit had to make sure that when a teacher was not there, the students of the class should remain quiet."
+    question: "Complete the sentence: I enjoy chess, ___ I don't like cricket as much.",
+    options: ["and", "but", "because", "so"],
+    correct: "but",
+    explanation: "\"But\" is used to show contrast or opposite ideas between enjoying chess and not liking cricket."
   },
   {
-    question: "Which student always talked in the class?",
-    options: ["Amit","Nitin","Kafur","Gabito"],
-    correct: "Nitin",
-    explanation: "Nitin always talked in the class."
+    question: "Complete the sentence: We did not get the seats we wanted ___ we reached late.",
+    options: ["though", "but", "because", "until"],
+    correct: "because",
+    explanation: "\"Because\" gives the reason for not getting the desired seats."
   },
   {
-    question: "At what age did the narrator first see Dr. Alfredo Barboza?",
-    options: ["As a teenager","Ten or eleven years old","Five or six years old","As a young man"],
-    correct: "Five or six years old",
-    explanation: "The narrator had seen him for the first time when they were five or six years old."
+    question: "Which conjunction best completes the sentence? Our dog Mili hid under the bed, ___ she is scared of loud firecrackers.",
+    options: ["because", "although", "until", "but"],
+    correct: "because",
+    explanation: "The second clause provides the reason for the dog hiding, so \"because\" is correct."
   },
   {
-    question: "What physical feature was particularly striking about Dr. Barboza?",
-    options: ["He was short and stout","He had intense blue eyes","He had intense yellow eyes and beautiful hair","He had a long white beard"],
-    correct: "He had intense yellow eyes and beautiful hair",
-    explanation: "He was tall and thin with beautiful hair and intense yellow eyes."
+    question: "Combine the following sentences correctly: \"Bananas are tasty. Bananas are nutritious.\"",
+    options: [
+      "Bananas are not only tasty but also nutritious.",
+      "Bananas are neither tasty nor nutritious.",
+      "Bananas are tasty though nutritious.",
+      "Bananas are not only tasty and also nutritious."
+    ],
+    correct: "Bananas are not only tasty but also nutritious.",
+    explanation: "The conjunction pair \"not only ... but also\" is used to combine two complementary qualities."
   },
   {
-    question: "Why did the narrator secretly enter Dr. Barboza's garden during childhood?",
-    options: ["To play with friends","To meet Dr. Barboza","To steal apples","To steal mangoes"],
-    correct: "To steal mangoes",
-    explanation: "The narrator entered secretly into the garden to steal mangoes."
+    question: "Complete the sentence: I ate bitter gourd for lunch ___ I dislike it.",
+    options: ["as", "because", "although", "since"],
+    correct: "although",
+    explanation: "\"Although\" shows a fact that makes another fact look surprising (eating something despite disliking it)."
   },
   {
-    question: "What did the narrator consider Dr. Barboza to be during their childhood?",
-    options: ["A kind teacher","A personal ghost","A grumpy neighbor","A famous writer"],
-    correct: "A personal ghost",
-    explanation: "The narrator refers to Dr. Barboza by saying, \"He was my personal ghost\"."
+    question: "Complete the sentence: I will be sleepy by this evening ___ I woke up very early.",
+    options: ["but", "though", "because", "until"],
+    correct: "because",
+    explanation: "\"Because\" provides the reason for why the person will be sleepy."
   },
   {
-    question: "What did the narrator ultimately want to become?",
-    options: ["A doctor","A teacher","A writer","A scientist"],
-    correct: "A writer",
-    explanation: "The narrator wanted to become a writer."
+    question: "Complete the sentence correctly: Vijay ___ speaks Spanish but also German.",
+    options: ["both", "not only", "although", "nonetheless"],
+    correct: "not only",
+    explanation: "The presence of \"but also\" later in the sentence requires its pair \"not only\"."
   },
   {
-    question: "What kind of boy was Thomas Alva Edison described as in the poem?",
-    options: ["An ordinary boy","An unusual boy","A playful boy","A foolish boy"],
-    correct: "An unusual boy",
-    explanation: "The poem describes Thomas Alva Edison as a \"most unusual boy\"."
+    question: "Complete the sentence: ___ my friend comes, I am not going to cut my birthday cake.",
+    options: ["Since", "Until", "Because", "Though"],
+    correct: "Until",
+    explanation: "\"Until\" shows time, indicating an action won't happen before a specific event."
   },
   {
-    question: "What skill did Edison learn while working as a newsboy on a train?",
-    options: ["How to drive the train","How to sell newspapers faster","How to telegraph","How to build a laboratory"],
-    correct: "How to telegraph",
-    explanation: "He worked as a newsboy on a train and learnt to telegraph."
+    question: "Choose the correct conjunction: I dislike apples. ___, I ate the apple pie that my mother baked.",
+    options: ["Since", "Because", "Nonetheless", "Until"],
+    correct: "Nonetheless",
+    explanation: "\"Nonetheless\" introduces a contrasting action performed despite the previous statement."
   },
   {
-    question: "Who asked, \"What on earth has happened?\"",
-    options: ["The merchant","The merchant's wife","Kafur","The slave dealer"],
-    correct: "The merchant",
-    explanation: "The merchant said this to Kafur."
+    question: "Complete the sentence: You can butter the bread ___ I slice the apples.",
+    options: ["because", "while", "until", "though"],
+    correct: "while",
+    explanation: "\"While\" is used to indicate two actions happening simultaneously during a period of time."
   },
   {
-    question: "Who said the words, \"Oh! You be safe\"?",
-    options: ["Kafur","The merchant","The merchant's wife","The slave dealer"],
-    correct: "The merchant's wife",
-    explanation: "The merchant's wife asked this to the merchant."
+    question: "Join these sentences: \"It was very hot. We were thirsty.\"",
+    options: [
+      "It was very hot because we were thirsty.",
+      "It was very hot, so we were thirsty.",
+      "Although it was very hot, we were thirsty.",
+      "It was very hot until we were thirsty."
+    ],
+    correct: "It was very hot, so we were thirsty.",
+    explanation: "\"So\" is used to show the result or consequence of the first statement."
   },
   {
-    question: "Who asked the question, \"How much is this slave?\"",
-    options: ["The merchant's wife","The merchant","The slave dealer","Kafur"],
-    correct: "The merchant",
-    explanation: "The merchant said this to the slave dealer."
+    question: "Join these sentences: \"We stopped at a hotel. It was late at night.\"",
+    options: [
+      "We stopped at a hotel though it was late at night.",
+      "We stopped at a hotel because it was late at night.",
+      "We stopped at a hotel until it was late at night.",
+      "We stopped at a hotel, so it was late at night."
+    ],
+    correct: "We stopped at a hotel because it was late at night.",
+    explanation: "\"Because\" correctly connects the action with its underlying reason."
   },
   {
-    question: "Who exclaimed, \"That's very good! Congratulations!\"?",
-    options: ["Amit's teacher","Amit's father","Amit's mother","Amit's friend"],
-    correct: "Amit's mother",
-    explanation: "Amit's mother said this to Amit."
+    question: "Which conjunction gives us a reason?",
+    options: ["and", "but", "because", "or"],
+    correct: "because",
+    explanation: "The conjunction \"because\" is explicitly used to give us a reason."
   },
   {
-    question: "Who said, \"So you are the great Gabito\"?",
-    options: ["The narrator","Dr. Alfredo Barboza","The narrator's mother","A teacher"],
-    correct: "Dr. Alfredo Barboza",
-    explanation: "Dr. Barboza said this to the narrator."
+    question: "Which conjunction shows addition of two things?",
+    options: ["and", "or", "but", "though"],
+    correct: "and",
+    explanation: "\"And\" shows the addition of two things."
   },
   {
-    question: "In which city was the merchant walking through the market when he saw a slave for sale?",
-    options: ["Baghdad","Cairo","Damascus","Istanbul"],
-    correct: "Cairo",
-    explanation: "The merchant was walking through a market in Cairo when he saw a slave for sale."
+    question: "Which pair of conjunctions mean \"in spite of\"?",
+    options: ["and / or", "though / although", "since / until", "because / so"],
+    correct: "though / although",
+    explanation: "Both \"though\" and \"although\" mean in spite of, showing a fact that makes another fact look surprising."
   },
   {
-    question: "What was the only option left for Kafur after telling his lie?",
-    options: ["To apologize","To pay a fine","To leave the place","To go to jail"],
-    correct: "To leave the place",
-    explanation: "Kafur had no other option rather than to leave the place."
+    question: "What is the correct indirect speech? Zeehan says, 'Ice cream tastes good in summer.'",
+    options: [
+      "Zeehan said that ice cream tasted good in summer.",
+      "Zeehan says that ice cream tasted good in summer.",
+      "Zeehan says that ice cream tastes good in summer.",
+      "Zeehan said that ice cream tastes good in summer."
+    ],
+    correct: "Zeehan says that ice cream tastes good in summer.",
+    explanation: "If the reporting verb is in the present tense (\"says\"), the tense inside the reported speech does not change."
   },
   {
-    question: "When did Cinderella run away from the ball?",
-    options: ["At sunset","At midnight (when the clock struck twelve)","At dawn","When the prince asked her name"],
-    correct: "At midnight (when the clock struck twelve)",
-    explanation: "Cinderella ran when the clock struck twelve."
+    question: "What is the correct indirect speech? The children say, 'School is fun.'",
+    options: [
+      "The children said that school was fun.",
+      "The children say that school is fun.",
+      "The children say that school was fun.",
+      "The children said that school is fun."
+    ],
+    correct: "The children say that school is fun.",
+    explanation: "Because the reporting verb \"say\" is in the present tense, the verb \"is\" remains unchanged in indirect speech."
   },
   {
-    question: "At the end of the competition or event, what did Amit's house win?",
-    options: ["A gold medal","A certificate","The trophy","A cash prize"],
-    correct: "The trophy",
-    explanation: "At the end, Amit's house won the trophy."
+    question: "What is the correct indirect speech? Meera says, 'I like to play tennis.'",
+    options: [
+      "Meera says that she like to play tennis.",
+      "Meera said that she liked to play tennis.",
+      "Meera says that she likes to play tennis.",
+      "Meera said that she likes to play tennis."
+    ],
+    correct: "Meera says that she likes to play tennis.",
+    explanation: "The reporting verb is \"says\", so the tense doesn't change, but \"I\" changes to \"she\" and \"like\" becomes \"likes\" for subject-verb agreement."
   },
   {
-    question: "Who gave Amit a good piece of advice regarding discipline?",
-    options: ["His teacher","His mother","His father","The principal"],
-    correct: "His father",
-    explanation: "Amit's father gave him a good piece of advice."
+    question: "What is the correct indirect speech? I said, 'We have a bath every morning.'",
+    options: [
+      "I said that they had a bath every morning.",
+      "I said that we have a bath every morning.",
+      "I said that we had a bath every morning.",
+      "I said that they have a bath every morning."
+    ],
+    correct: "I said that we have a bath every morning.",
+    explanation: "A specific rule states that if the speaker is \"I\", the pronoun \"we\" does not change in indirect speech."
   },
   {
-    question: "How did the other children escape from Dr. Barboza's garden?",
-    options: ["Over the wall","Through an opening in the fence","Through the front gate","By climbing a tree"],
-    correct: "Through an opening in the fence",
-    explanation: "The others escaped through an opening in the fence."
+    question: "What is the correct indirect speech? Sahil says, 'I draw cartoons on the board every Sunday.'",
+    options: [
+      "Sahil said that he drew cartoons on the board every Sunday.",
+      "Sahil says that he draw cartoons on the board every Sunday.",
+      "Sahil says that he draws cartoons on the board every Sunday.",
+      "Sahil says that I draw cartoons on the board every Sunday."
+    ],
+    correct: "Sahil says that he draws cartoons on the board every Sunday.",
+    explanation: "The reporting verb is present (\"says\"), so the tense remains present, but \"I draw\" becomes \"he draws\" to match the new pronoun."
   },
   {
-    question: "Who is Dr. Alfredo Barboza?",
-    options: ["A young man","An old man","A ghost","A tall, muscular man"],
-    correct: "An old man",
-    explanation: "Dr. Alfredo Barboza is an old man."
+    question: "What is the correct indirect speech? Mohit said, 'Lucknow gets very hot in summer.'",
+    options: [
+      "Mohit said that Lucknow gets very hot in summer.",
+      "Mohit said that Lucknow got very hot in summer.",
+      "Mohit says that Lucknow got very hot in summer.",
+      "Mohit said that Lucknow is getting very hot in summer."
+    ],
+    correct: "Mohit said that Lucknow got very hot in summer.",
+    explanation: "Since the reporting verb \"said\" is past tense, the verb inside the reported speech changes to past tense (\"got\")."
   },
   {
-    question: "Who did Dr. Barboza recognize at first?",
-    options: ["The narrator's mother","The narrator","Gabito","Amit"],
-    correct: "Gabito",
-    explanation: "Dr. Barboza at first recognized Gabito."
+    question: "What is the correct indirect speech? The teacher said, 'The earth is round.'",
+    options: [
+      "The teacher said that the earth was round.",
+      "The teacher said that the earth is round.",
+      "The teacher says that the earth was round.",
+      "The teacher said that the earth had been round."
+    ],
+    correct: "The teacher said that the earth is round.",
+    explanation: "Universal truths or scientific facts do not change tense in indirect speech, even if the reporting verb is in the past tense."
   },
   {
-    question: "What is \"ebony\"?",
-    options: ["A hard white substance from elephant tusks","A hard, black wood","A precious metal","A type of string bed"],
-    correct: "A hard, black wood",
-    explanation: "Ebony is defined as a hard, black wood."
+    question: "What is the correct indirect speech? Upasna says, 'I like cartoon films.'",
+    options: [
+      "Upasna said that she liked cartoon films.",
+      "Upasna says that she likes cartoon films.",
+      "Upasna says that she like cartoon films.",
+      "Upasna said that she likes cartoon films."
+    ],
+    correct: "Upasna says that she likes cartoon films.",
+    explanation: "The reporting verb \"says\" means the tense doesn't change, but \"I\" becomes \"she\" and the verb becomes \"likes\"."
   },
   {
-    question: "What is a \"hammock\"?",
-    options: ["A kind of string bed hung from posts or trees","A small shed built in the grounds","A ghost or spirit","A building made of stone"],
-    correct: "A kind of string bed hung from posts or trees",
-    explanation: "A hammock is a kind of string bed hung from posts or trees at both ends."
+    question: "What is the correct indirect speech? 'I polish my shoes every day,' says Rohit.",
+    options: [
+      "Rohit said that he polished his shoes every day.",
+      "Rohit says that he polish his shoes every day.",
+      "Rohit says that he polishes his shoes every day.",
+      "Rohit said that he polishes his shoes every day."
+    ],
+    correct: "Rohit says that he polishes his shoes every day.",
+    explanation: "With \"says\", the tense stays in the present, but \"I polish\" changes to \"he polishes\"."
   },
   {
-    question: "What is the meaning of the word \"consequence\"?",
-    options: ["A mean person","To feel and show sorrow","Something that happens because of an event or action","To escape without punishment"],
-    correct: "Something that happens because of an event or action",
-    explanation: "Consequence is defined as something that happens because of an event or action."
+    question: "Fill in the blank: In indirect speech, the pronouns change as per the ___ of the speaker.",
+    options: ["tense", "gender", "mood", "verb"],
+    correct: "gender",
+    explanation: "When converting to indirect speech, pronouns change according to the gender of the speaker."
   },
   {
-    question: "What is the opposite of \"proud\"?",
-    options: ["Humble or Kind","Ashamed or Disappointed","Ugly or dull","Sad or Depressed"],
-    correct: "Ashamed or Disappointed",
-    explanation: "The opposites provided for proud are disappointed or ashamed."
-  },
-  {
-    question: "What does TTC stand for?",
-    options: ["The Tutoring Center","Tushar Tuition Classes","Technical Training College","Teachers Training Camp"],
+    question: "What is the full form of TTC?",
+    options: ["Tushar Tuition Center", "Technical Training Classes", "Tushar Tuition Classes", "Teacher Training Center"],
     correct: "Tushar Tuition Classes",
-    explanation: "TTC stands for Tushar Tuition Classes."
+    explanation: "TTC bole to Tushar Tuition Classes."
+  },
+  {
+    question: "Which punctuation mark shows ownership and missing letters in contractions?",
+    options: ["Comma", "Apostrophe", "Full stop", "Quotation mark"],
+    correct: "Apostrophe",
+    explanation: "An apostrophe is used specifically to show ownership and to replace missing letters in contractions."
+  },
+  {
+    question: "Which of the following book titles is capitalized correctly?",
+    options: [
+      "The tales of beedle the bard",
+      "The Tales Of Beedle The Bard",
+      "The Tales of Beedle the Bard",
+      "The Tales Of beedle The bard"
+    ],
+    correct: "The Tales of Beedle the Bard",
+    explanation: "Major words in a title are capitalized, but short prepositions or articles (like \"of\" and \"the\") are not capitalized unless they are the first or last word."
+  },
+  {
+    question: "Choose the correctly punctuated sentence.",
+    options: [
+      "'Peter pan is a very interesting character,' said mandy.",
+      "'Peter Pan is a very interesting character,' said Mandy.",
+      "'Peter Pan is a very interesting character' said Mandy.",
+      "\"Peter Pan is a very interesting character,\" said mandy."
+    ],
+    correct: "'Peter Pan is a very interesting character,' said Mandy.",
+    explanation: "Proper nouns must be capitalized, spoken words go in quotation marks, and a comma is needed before the closing mark when followed by a speech tag."
+  },
+  {
+    question: "Choose the correctly punctuated sentence.",
+    options: [
+      "'The room needs to be cleaned' her mother said to her.",
+      "'The room needs to be cleaned,' her mother said to her.",
+      "The room needs to be cleaned, her mother said to her.",
+      "'the room needs to be cleaned,' her mother said to her."
+    ],
+    correct: "'The room needs to be cleaned,' her mother said to her.",
+    explanation: "Direct speech requires quotation marks, a comma to separate the quote from the reporting clause, and a capital letter at the start."
+  },
+  {
+    question: "Choose the correctly punctuated sentence.",
+    options: [
+      "Wow that was a really good film.",
+      "Wow! That was a really good film.",
+      "Wow, that was a really good film?",
+      "Wow! that was a really good film."
+    ],
+    correct: "Wow! That was a really good film.",
+    explanation: "\"Wow\" expresses strong feeling and should be followed by an exclamation mark. The next word must begin with a capital letter."
+  },
+  {
+    question: "Choose the correctly punctuated sentence.",
+    options: [
+      "Pipal, neem, banyan and teak are some trees found in this forest.",
+      "Pipal neem banyan and teak are some trees found in this forest.",
+      "Pipal, neem, banyan, and teak, are some trees found in this forest.",
+      "pipal, neem, banyan and teak are some trees found in this forest."
+    ],
+    correct: "Pipal, neem, banyan and teak are some trees found in this forest.",
+    explanation: "Commas separate items in a list, and the first letter of the sentence must be capitalized."
   }
 ]
  
