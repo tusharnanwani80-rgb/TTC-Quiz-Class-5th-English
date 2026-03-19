@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TTC Quiz – Grammar</title>
- 
-<link href="https://fonts.googleapis.com/css2?family=Righteous&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>TTC Quiz – Maths Definitions</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Righteous&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
- 
 <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+/* ═══════════════════════════════════
+   QUIZ ROOT VARIABLES
+═══════════════════════════════════ */
 :root {
   --blue:   #4361EE;
   --orange: #FF6B35;
@@ -21,8 +24,6 @@
   --light:  #EDEDF7;
   --green:  #25D366;
 }
- 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
 body {
   font-family: 'DM Sans', sans-serif;
@@ -39,7 +40,315 @@ body {
   padding: 20px 0;
 }
  
-.app { width: 430px; max-width: 95vw; }
+/* ═══════════════════════════════════
+   AD OVERLAY
+═══════════════════════════════════ */
+#adOverlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s ease;
+}
+ 
+/* ── AD STAGE (all ad vars scoped here) ── */
+.stage {
+  --rust:   #E8522A;
+  --rust2:  #FF7043;
+  --cream:  #FFF8F3;
+  --yellow: #FFD93D;
+  --blue:   #4CC9F0;
+  --green:  #06D6A0;
+  --pink:   #FF6B9D;
+  --purple: #A78BFA;
+  --dark:   #2D2A26;
+ 
+  width: 360px; height: 640px;
+  position: relative; overflow: hidden;
+  background: var(--cream);
+  border-radius: 32px;
+  box-shadow:
+    0 0 0 4px #fff,
+    0 0 0 8px var(--rust),
+    0 30px 80px rgba(232,82,42,.3),
+    0 50px 120px rgba(0,0,0,.2);
+}
+ 
+canvas#particles {
+  position: absolute; inset: 0;
+  z-index: 60; pointer-events: none;
+  border-radius: 32px;
+}
+ 
+/* ── SCENES ── */
+.scene {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; z-index: 10;
+}
+.scene.active { opacity: 1; pointer-events: auto; }
+ 
+/* S0 — HEY HOOK */
+.s0 { background: var(--yellow); overflow: hidden; }
+.s0 .dots-bg {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.55) 2px, transparent 2px);
+  background-size: 28px 28px;
+}
+.hey-emoji {
+  font-size: 72px; opacity: 0; transform: scale(0) rotate(-20deg);
+  position: relative; z-index: 2;
+  filter: drop-shadow(0 6px 0 rgba(0,0,0,.12));
+}
+.s0.active .hey-emoji { animation: bounceIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.1s forwards; }
+.hey-text {
+  font-family: 'Fredoka One', cursive; font-size: 80px; line-height: 1;
+  color: var(--dark); text-align: center; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(30px); text-shadow: 0 5px 0 rgba(0,0,0,.1);
+}
+.s0.active .hey-text { animation: adSlideUp 0.35s ease 0.35s forwards; }
+.hey-sub {
+  font-size: 18px; font-weight: 800; color: var(--rust); letter-spacing: 1px;
+  position: relative; z-index: 2; opacity: 0; transform: translateY(15px); margin-top: 10px;
+}
+.s0.active .hey-sub { animation: adSlideUp 0.3s ease 0.6s forwards; }
+.pill-row { display: flex; gap: 8px; position: relative; z-index: 2; margin-top: 20px; opacity: 0; }
+.s0.active .pill-row { animation: adFadeIn 0.3s ease 0.85s forwards; }
+.pill {
+  background: #fff; border-radius: 50px; padding: 6px 14px;
+  font-size: 12px; font-weight: 800; color: var(--dark);
+  box-shadow: 0 3px 0 rgba(0,0,0,.1);
+}
+ 
+/* S1 — COUNTDOWN */
+.s1 { background: var(--cream); overflow: hidden; }
+.s1::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(232,82,42,.08) 0%, transparent 70%);
+}
+.cd-ring {
+  width: 220px; height: 220px; border-radius: 50%;
+  border: 8px solid rgba(232,82,42,.15);
+  display: flex; align-items: center; justify-content: center; position: absolute;
+}
+.cd-ring-inner {
+  width: 170px; height: 170px; border-radius: 50%; background: var(--rust);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 0 #b33d1c, 0 12px 30px rgba(232,82,42,.4);
+  opacity: 0; transform: scale(0);
+}
+.s1.active .cd-ring-inner { animation: popBounce 0.3s cubic-bezier(0.175,0.885,0.32,1.275) 0.05s forwards; }
+.cd-num {
+  font-family: 'Fredoka One', cursive; font-size: 110px; color: #fff;
+  line-height: 1; position: relative; z-index: 2; text-shadow: 0 4px 0 rgba(0,0,0,.2);
+}
+.cd-label {
+  font-size: 14px; font-weight: 800; color: var(--rust); letter-spacing: 4px;
+  text-transform: uppercase; position: absolute; bottom: 130px; opacity: 0;
+}
+.s1.active .cd-label { animation: adFadeIn 0.3s ease 0.3s forwards; }
+ 
+/* S2 — TITLE BLAST */
+.s2 { background: var(--cream); overflow: hidden; }
+.s2 .burst-bg {
+  position: absolute; inset: 0;
+  background: conic-gradient(from 0deg,#FFD93D 0deg 30deg,transparent 30deg 60deg,#FFD93D 60deg 90deg,transparent 90deg 120deg,#FFD93D 120deg 150deg,transparent 150deg 180deg,#FFD93D 180deg 210deg,transparent 210deg 240deg,#FFD93D 240deg 270deg,transparent 270deg 300deg,#FFD93D 300deg 330deg,transparent 330deg 360deg);
+  opacity: 0; transform: scale(0); border-radius: 50%;
+  width: 600px; height: 600px; top: 50%; left: 50%; margin: -300px 0 0 -300px;
+}
+.s2.active .burst-bg { animation: burstExpand 0.5s ease 0s forwards; }
+.s2 .logo-ring {
+  width: 100px; height: 100px; border-radius: 50%; background: var(--rust);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 0 #b33d1c, 0 10px 24px rgba(232,82,42,.35);
+  margin-bottom: 16px; position: relative; z-index: 2;
+  opacity: 0; transform: scale(0) rotate(-180deg);
+}
+.s2.active .logo-ring { animation: spinIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.15s forwards; }
+.s2 .logo-ring img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.big-ttc {
+  font-family: 'Fredoka One', cursive; font-size: 100px; line-height: .95;
+  color: var(--rust); text-align: center; position: relative; z-index: 2;
+  opacity: 0; transform: scale(0.4) rotate(-6deg); text-shadow: 0 6px 0 #b33d1c; letter-spacing: -2px;
+}
+.s2.active .big-ttc { animation: blastIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275) 0.25s forwards; }
+.big-quiz {
+  font-family: 'Fredoka One', cursive; font-size: 86px; line-height: .95;
+  color: var(--dark); text-align: center; position: relative; z-index: 2;
+  opacity: 0; transform: scale(0.4) rotate(6deg); text-shadow: 0 5px 0 rgba(0,0,0,.15);
+}
+.s2.active .big-quiz { animation: blastIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275) 0.38s forwards; }
+.v2-tag {
+  background: var(--green); color: #fff; font-size: 12px; font-weight: 900;
+  letter-spacing: 2px; padding: 6px 18px; border-radius: 50px; position: relative; z-index: 2;
+  margin-top: 14px; box-shadow: 0 4px 0 #04a87e; opacity: 0; transform: translateY(15px);
+}
+.s2.active .v2-tag { animation: adSlideUp 0.3s ease 0.6s forwards; }
+ 
+/* S3 — FEATURES */
+.s3 { background: var(--cream); padding: 30px 22px; justify-content: flex-start; padding-top: 60px; }
+.s3 .feat-title {
+  font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--dark);
+  text-align: center; margin-bottom: 18px; opacity: 0;
+}
+.s3.active .feat-title { animation: adFadeIn 0.25s ease 0.05s forwards; }
+.feat-list { display: flex; flex-direction: column; gap: 11px; width: 100%; }
+.fcard {
+  display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 18px;
+  opacity: 0; transform: translateX(-50px) scale(.95); position: relative; overflow: hidden;
+}
+.fcard::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,.25); border-radius: 18px; }
+.fcard.c1 { background: #FFE8E0; box-shadow: 0 4px 0 rgba(232,82,42,.25); }
+.fcard.c2 { background: #E8F8FF; box-shadow: 0 4px 0 rgba(76,201,240,.25); }
+.fcard.c3 { background: #E8FFF8; box-shadow: 0 4px 0 rgba(6,214,160,.25); }
+.fcard.c4 { background: #FFF5E0; box-shadow: 0 4px 0 rgba(255,217,61,.4); }
+.s3.active .fcard:nth-child(1) { animation: cardBounce 0.25s cubic-bezier(0.175,0.885,0.32,1.275) 0.15s forwards; }
+.s3.active .fcard:nth-child(2) { animation: cardBounce 0.25s cubic-bezier(0.175,0.885,0.32,1.275) 0.3s forwards; }
+.s3.active .fcard:nth-child(3) { animation: cardBounce 0.25s cubic-bezier(0.175,0.885,0.32,1.275) 0.45s forwards; }
+.s3.active .fcard:nth-child(4) { animation: cardBounce 0.25s cubic-bezier(0.175,0.885,0.32,1.275) 0.6s forwards; }
+.fcard .ficon { font-size: 32px; flex-shrink: 0; position: relative; z-index: 1; }
+.fcard .finfo { flex: 1; position: relative; z-index: 1; }
+.fcard .finfo .flabel { font-size: 11px; font-weight: 700; color: rgba(45,42,38,.4); text-transform: uppercase; letter-spacing: 1px; }
+.fcard .finfo .fval { font-size: 16px; font-weight: 900; color: var(--dark); margin-top: 1px; }
+.fcard .fbadge { font-size: 10px; font-weight: 900; letter-spacing: 1px; padding: 4px 10px; border-radius: 50px; position: relative; z-index: 1; }
+.fbadge.new { background: var(--rust); color: #fff; }
+.fbadge.v2  { background: var(--green); color: #fff; }
+ 
+/* S4 — UPDATE */
+.s4 { background: var(--rust); overflow: hidden; }
+.s4 .confetti-bg {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle,rgba(255,255,255,.12) 3px,transparent 3px), radial-gradient(circle,rgba(255,217,61,.25) 2px,transparent 2px);
+  background-size: 40px 40px, 25px 25px; background-position: 0 0, 12px 12px;
+}
+.s4 .zigzag { position: absolute; top: 0; left: 0; right: 0; height: 30px; background: var(--cream); clip-path: polygon(0 0,5% 100%,10% 0,15% 100%,20% 0,25% 100%,30% 0,35% 100%,40% 0,45% 100%,50% 0,55% 100%,60% 0,65% 100%,70% 0,75% 100%,80% 0,85% 100%,90% 0,95% 100%,100% 0,100% 0,0 0); }
+.s4 .zigzag-bot { position: absolute; bottom: 0; left: 0; right: 0; height: 30px; background: var(--cream); clip-path: polygon(0 100%,5% 0,10% 100%,15% 0,20% 100%,25% 0,30% 100%,35% 0,40% 100%,45% 0,50% 100%,55% 0,60% 100%,65% 0,70% 100%,75% 0,80% 100%,85% 0,90% 100%,95% 0,100% 100%,100% 100%,0 100%); }
+.update-badge {
+  background: var(--yellow); color: var(--dark); font-size: 11px; font-weight: 900;
+  letter-spacing: 3px; padding: 7px 20px; border-radius: 50px; position: relative; z-index: 2;
+  box-shadow: 0 4px 0 rgba(0,0,0,.15); opacity: 0; transform: scale(0);
+}
+.s4.active .update-badge { animation: popBounce 0.3s cubic-bezier(0.175,0.885,0.32,1.275) 0.1s forwards; }
+.update-headline {
+  font-family: 'Fredoka One', cursive; font-size: 62px; line-height: 1; color: #fff;
+  text-align: center; text-shadow: 0 5px 0 rgba(0,0,0,.2); position: relative; z-index: 2;
+  margin-top: 16px; opacity: 0; transform: scale(0.7);
+}
+.s4.active .update-headline { animation: popBounce 0.35s cubic-bezier(0.175,0.885,0.32,1.275) 0.28s forwards; }
+.update-items { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; position: relative; z-index: 2; width: 85%; }
+.uitem { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.22); border-radius: 14px; padding: 11px 16px; opacity: 0; transform: translateY(20px); }
+.uitem .uicon { font-size: 22px; }
+.uitem .utxt { font-size: 14px; font-weight: 800; color: #fff; }
+.s4.active .uitem:nth-child(1) { animation: adSlideUp 0.25s ease 0.6s forwards; }
+.s4.active .uitem:nth-child(2) { animation: adSlideUp 0.25s ease 0.75s forwards; }
+.s4.active .uitem:nth-child(3) { animation: adSlideUp 0.25s ease 0.9s forwards; }
+ 
+/* S5 — CTA */
+.s5 { background: var(--cream); overflow: hidden; }
+.s5 .top-wave { position: absolute; top: 0; left: 0; right: 0; height: 200px; background: var(--yellow); clip-path: ellipse(55% 60% at 50% 0%); }
+.stars-row { display: flex; gap: 6px; margin-bottom: 16px; position: relative; z-index: 2; opacity: 0; }
+.s5.active .stars-row { animation: adFadeIn 0.3s ease 0.1s forwards; }
+.stars-row span { font-size: 28px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.1)); }
+.cta-logo-wrap { position: relative; z-index: 2; opacity: 0; transform: scale(0) rotate(-360deg); margin-bottom: 14px; }
+.s5.active .cta-logo-wrap { animation: spinIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s forwards; }
+.cta-logo-wrap img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 6px 0 var(--rust), 0 12px 24px rgba(232,82,42,.3); }
+.cta-main-title {
+  font-family: 'Fredoka One', cursive; font-size: 72px; line-height: 1;
+  color: var(--dark); text-align: center; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(25px); letter-spacing: -1px;
+}
+.cta-main-title span { color: var(--rust); }
+.s5.active .cta-main-title { animation: adSlideUp 0.3s ease 0.45s forwards; }
+.cta-subtitle {
+  font-family: 'Nunito', sans-serif; font-size: 20px; font-weight: 900;
+  color: rgba(45,42,38,.55); text-align: center; position: relative; z-index: 2;
+  opacity: 0; transform: translateY(10px); margin-top: 4px; letter-spacing: 0.5px;
+}
+.s5.active .cta-subtitle { animation: adSlideUp 0.3s ease 0.65s forwards; }
+.tag-row { display: flex; gap: 8px; margin-top: 14px; position: relative; z-index: 2; opacity: 0; }
+.s5.active .tag-row { animation: adFadeIn 0.3s ease 0.75s forwards; }
+.tag { font-size: 11px; font-weight: 900; letter-spacing: 1px; padding: 6px 14px; border-radius: 50px; box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+.tag.t1 { background: var(--blue); color: #fff; }
+.tag.t2 { background: var(--green); color: #fff; }
+.tag.t3 { background: var(--pink); color: #fff; }
+.play-btn {
+  margin-top: 22px; background: var(--rust); color: #fff;
+  font-family: 'Fredoka One', cursive; font-size: 22px; letter-spacing: 1px;
+  padding: 18px 48px; border-radius: 18px; border: none; cursor: pointer;
+  box-shadow: 0 7px 0 #b33d1c, 0 12px 24px rgba(232,82,42,.3);
+  position: relative; z-index: 2; opacity: 0; transform: translateY(20px) scale(.9);
+  transition: transform 0.1s, box-shadow 0.1s; overflow: hidden;
+}
+.play-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent); animation: adShimmer 2s linear 1.2s infinite; }
+.s5.active .play-btn { animation: adSlideUp 0.35s cubic-bezier(0.175,0.885,0.32,1.275) 1s forwards, btnPulse 1.8s ease 1.5s infinite; }
+.play-btn:hover { transform: translateY(-2px) scale(1.03) !important; box-shadow: 0 10px 0 #b33d1c, 0 16px 30px rgba(232,82,42,.35) !important; }
+.play-btn:active { transform: translateY(5px) scale(.98) !important; box-shadow: 0 2px 0 #b33d1c !important; }
+.cta-tagline { font-size: 11px; font-weight: 700; color: rgba(45,42,38,.35); text-align: center; margin-top: 14px; letter-spacing: 1px; position: relative; z-index: 2; opacity: 0; }
+.s5.active .cta-tagline { animation: adFadeIn 0.3s ease 1.3s forwards; }
+ 
+/* ── SCENE DOTS ── */
+.scene-dots { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 200; }
+.sdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(45,42,38,.15); transition: all 0.3s; }
+.sdot.on { background: var(--rust); width: 20px; border-radius: 3px; }
+ 
+/* ── PROGRESS ── */
+.prog-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: rgba(45,42,38,.06); z-index: 300; border-radius: 0 0 32px 32px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--rust), var(--yellow)); border-radius: 0 0 32px 32px; box-shadow: 0 0 8px rgba(232,82,42,.5); }
+ 
+/* ── REPLAY ── */
+.replay-btn {
+  position: absolute; bottom: 14px; right: 14px;
+  background: var(--rust); color: #fff; font-family: 'Fredoka One', cursive;
+  font-size: 13px; letter-spacing: 1px; padding: 8px 18px; border-radius: 50px; border: none;
+  cursor: pointer; box-shadow: 0 3px 0 #b33d1c; opacity: 0; transition: opacity 0.3s; z-index: 500;
+}
+.replay-btn.show { opacity: 1; }
+ 
+/* ── START SCREEN ── */
+.start-screen {
+  position: absolute; inset: 0; z-index: 400; background: var(--cream);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 32px; overflow: hidden; transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.start-screen.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+.start-screen .top-blob { position: absolute; top: 0; left: 0; right: 0; height: 260px; background: var(--yellow); clip-path: ellipse(60% 65% at 50% 0%); }
+.start-screen .bot-blob { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: rgba(232,82,42,.08); clip-path: ellipse(70% 80% at 50% 100%); }
+.start-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 6px 0 var(--rust), 0 14px 28px rgba(232,82,42,.25); position: relative; z-index: 2; animation: adFloat 3s ease-in-out infinite; }
+.start-ttc { font-family: 'Fredoka One', cursive; font-size: 52px; line-height: 1; color: var(--rust); text-align: center; position: relative; z-index: 2; margin-top: 18px; text-shadow: 0 4px 0 #b33d1c; }
+.start-ttc span { color: var(--dark); }
+.start-tagline { font-size: 14px; font-weight: 800; color: rgba(45,42,38,.5); letter-spacing: 1px; position: relative; z-index: 2; margin-top: 6px; text-align: center; }
+.start-badge { background: var(--green); color: #fff; font-size: 11px; font-weight: 900; letter-spacing: 2px; padding: 6px 16px; border-radius: 50px; position: relative; z-index: 2; margin-top: 14px; box-shadow: 0 4px 0 #04a87e; }
+.start-btn {
+  margin-top: 36px; background: var(--rust); color: #fff;
+  font-family: 'Fredoka One', cursive; font-size: 24px; letter-spacing: 1px;
+  padding: 18px 56px; border-radius: 18px; border: none; cursor: pointer;
+  box-shadow: 0 7px 0 #b33d1c, 0 14px 28px rgba(232,82,42,.3);
+  position: relative; z-index: 2; overflow: hidden;
+  animation: btnPulse 1.8s ease infinite; transition: transform 0.1s, box-shadow 0.1s;
+}
+.start-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent); animation: adShimmer 2s linear infinite; }
+.start-btn:hover  { transform: translateY(-2px); box-shadow: 0 10px 0 #b33d1c, 0 18px 32px rgba(232,82,42,.35); }
+.start-btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #b33d1c; }
+.start-note { font-size: 11px; font-weight: 700; color: rgba(45,42,38,.3); letter-spacing: 1px; position: relative; z-index: 2; margin-top: 16px; }
+ 
+/* ── AD KEYFRAMES (prefixed to avoid quiz conflicts) ── */
+@keyframes bounceIn  { 0%{opacity:0;transform:scale(0) rotate(-20deg)} 60%{transform:scale(1.2) rotate(5deg)} 100%{opacity:1;transform:scale(1) rotate(0deg)} }
+@keyframes adSlideUp { from{opacity:0;transform:translateY(25px)} to{opacity:1;transform:translateY(0)} }
+@keyframes adFadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes popBounce { 0%{opacity:0;transform:scale(0)} 65%{transform:scale(1.12)} 100%{opacity:1;transform:scale(1)} }
+@keyframes blastIn   { 0%{opacity:0;transform:scale(0.4) rotate(-6deg)} 65%{transform:scale(1.08) rotate(1deg)} 100%{opacity:1;transform:scale(1) rotate(0deg)} }
+@keyframes spinIn    { 0%{opacity:0;transform:scale(0) rotate(-360deg)} 100%{opacity:1;transform:scale(1) rotate(0deg)} }
+@keyframes burstExpand { 0%{opacity:.4;transform:scale(0) rotate(0)} 100%{opacity:0;transform:scale(3) rotate(30deg)} }
+@keyframes cardBounce  { 0%{opacity:0;transform:translateX(-50px) scale(.95)} 65%{transform:translateX(5px) scale(1.02)} 100%{opacity:1;transform:translateX(0) scale(1)} }
+@keyframes adShimmer   { from{left:-100%} to{left:200%} }
+@keyframes btnPulse    { 0%,100%{box-shadow:0 7px 0 #b33d1c,0 12px 24px rgba(232,82,42,.3)} 50%{box-shadow:0 7px 0 #b33d1c,0 12px 40px rgba(232,82,42,.55)} }
+@keyframes adFloat     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes screenShake { 0%,100%{transform:translate(0,0)} 20%{transform:translate(-5px,3px)} 40%{transform:translate(5px,-3px)} 60%{transform:translate(-4px,4px)} 80%{transform:translate(4px,-2px)} }
+ 
+/* ═══════════════════════════════════
+   QUIZ STYLES
+═══════════════════════════════════ */
+.app { width: 430px; max-width: 95vw; display: none; }
  
 .screen { display: none; }
 .screen.active {
@@ -48,159 +357,81 @@ body {
 }
 @keyframes popIn {
   from { opacity: 0; transform: scale(0.92) translateY(18px); }
-  to   { opacity: 1; transform: scale(1)    translateY(0); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
  
 .card {
-  background: var(--white);
-  border: 3px solid var(--dark);
-  border-radius: 24px;
-  padding: 32px 28px;
-  box-shadow: 8px 8px 0px var(--dark);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  background: var(--white); border: 3px solid var(--dark);
+  border-radius: 24px; padding: 32px 28px;
+  box-shadow: 8px 8px 0px var(--dark); text-align: center;
+  position: relative; overflow: hidden;
 }
 .card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 6px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
   background: linear-gradient(90deg, var(--blue), var(--pink), var(--orange), var(--lime));
 }
  
 .logo {
-  width: 72px; height: 72px;
-  object-fit: contain;
-  border-radius: 50%;
-  border: 3px solid var(--dark);
-  box-shadow: 3px 3px 0 var(--dark);
-  margin-bottom: 14px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  width: 72px; height: 72px; object-fit: contain; border-radius: 50%;
+  border: 3px solid var(--dark); box-shadow: 3px 3px 0 var(--dark);
+  margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto;
 }
  
 .chip {
-  display: inline-block;
-  background: var(--lime);
-  color: var(--dark);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 50px;
-  border: 2px solid var(--dark);
-  box-shadow: 2px 2px 0 var(--dark);
-  margin-bottom: 14px;
+  display: inline-block; background: var(--lime); color: var(--dark);
+  font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 50px; border: 2px solid var(--dark);
+  box-shadow: 2px 2px 0 var(--dark); margin-bottom: 14px;
 }
  
-h2 {
-  font-family: 'Righteous', cursive;
-  font-size: 28px;
-  color: var(--dark);
-  line-height: 1.2;
-  margin-bottom: 8px;
-}
+h2 { font-family: 'Righteous', cursive; font-size: 28px; color: var(--dark); line-height: 1.2; margin-bottom: 8px; }
 p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20px; }
  
 .input-field {
-  width: 100%;
-  padding: 13px 16px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px; font-weight: 700;
-  color: var(--dark);
-  background: var(--off);
-  border: 2.5px solid var(--dark);
-  border-radius: 14px;
-  outline: none;
-  box-shadow: 3px 3px 0 var(--dark);
-  transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+  width: 100%; padding: 13px 16px; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700; color: var(--dark); background: var(--off);
+  border: 2.5px solid var(--dark); border-radius: 14px; outline: none;
+  box-shadow: 3px 3px 0 var(--dark); transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
   margin-bottom: 18px;
 }
-.input-field:focus {
-  box-shadow: 3px 3px 0 var(--blue);
-  border-color: var(--blue);
-  transform: translate(-1px,-1px);
-}
+.input-field:focus { box-shadow: 3px 3px 0 var(--blue); border-color: var(--blue); transform: translate(-1px,-1px); }
 .input-field::placeholder { color: #aaa; font-weight: 500; }
  
 .btn {
-  display: inline-block;
-  width: 100%;
-  padding: 14px 22px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px; font-weight: 800;
-  border: 2.5px solid var(--dark);
-  border-radius: 14px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  letter-spacing: 0.3px;
-  transition: transform 0.12s, box-shadow 0.12s;
-  box-shadow: 4px 4px 0 var(--dark);
-  margin-top: 10px;
+  display: inline-block; width: 100%; padding: 14px 22px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800;
+  border: 2.5px solid var(--dark); border-radius: 14px; cursor: pointer;
+  text-align: center; text-decoration: none; letter-spacing: 0.3px;
+  transition: transform 0.12s, box-shadow 0.12s; box-shadow: 4px 4px 0 var(--dark); margin-top: 10px;
 }
 .btn:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--dark); }
 .btn:active { transform: translate(2px,2px);   box-shadow: 2px 2px 0 var(--dark); }
- 
-.btn-blue   { background: var(--blue);   color: white; }
-.btn-lime   { background: var(--lime);   color: var(--dark); }
-.btn-pink   { background: var(--pink);   color: white; position: relative; overflow: hidden; }
-.btn-green  { background: var(--green);  color: white; }
-.btn-ghost  {
-  background: transparent; color: var(--grey);
-  border-color: var(--light); box-shadow: 4px 4px 0 var(--light);
-}
+.btn-blue   { background: var(--blue);  color: white; }
+.btn-lime   { background: var(--lime);  color: var(--dark); }
+.btn-pink   { background: var(--pink);  color: white; position: relative; overflow: hidden; }
+.btn-green  { background: var(--green); color: white; }
+.btn-ghost  { background: transparent; color: var(--grey); border-color: var(--light); box-shadow: 4px 4px 0 var(--light); }
 .btn-ghost:hover { border-color: var(--dark); color: var(--dark); box-shadow: 4px 4px 0 var(--dark); }
  
-.info-strip {
-  display: flex; flex-wrap: wrap;
-  justify-content: center; gap: 8px;
-  margin: 16px 0 22px;
-}
+.info-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0 22px; }
 .info-pill {
-  background: var(--off); border: 2px solid var(--dark);
-  border-radius: 50px; padding: 5px 14px;
-  font-size: 12px; font-weight: 700;
-  color: var(--dark); box-shadow: 2px 2px 0 var(--dark);
+  background: var(--off); border: 2px solid var(--dark); border-radius: 50px;
+  padding: 5px 14px; font-size: 12px; font-weight: 700; color: var(--dark); box-shadow: 2px 2px 0 var(--dark);
 }
  
 .progress-wrap { margin-bottom: 22px; }
-.progress-meta {
-  display: flex; justify-content: space-between;
-  font-size: 12px; font-weight: 800;
-  color: var(--dark); margin-bottom: 8px;
-  text-transform: uppercase; letter-spacing: 0.3px;
-}
-.progress-track {
-  height: 10px; background: var(--light);
-  border-radius: 50px; border: 2px solid var(--dark); overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--blue), var(--pink));
-  border-radius: 50px; width: 0%;
-  transition: width 0.5s cubic-bezier(.34,1.2,.64,1);
-}
+.progress-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
+.progress-track { height: 10px; background: var(--light); border-radius: 50px; border: 2px solid var(--dark); overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--pink)); border-radius: 50px; width: 0%; transition: width 0.5s cubic-bezier(.34,1.2,.64,1); }
  
-.question-text {
-  font-family: 'Righteous', cursive;
-  font-size: 20px; color: var(--dark);
-  line-height: 1.5; margin-bottom: 20px;
-  min-height: 60px; text-align: left;
-}
+.question-text { font-family: 'Righteous', cursive; font-size: 17px; color: var(--dark); line-height: 1.5; margin-bottom: 20px; min-height: 60px; text-align: left; }
  
 .options-grid { display: flex; flex-direction: column; gap: 10px; text-align: left; }
- 
 .option {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 16px;
-  background: var(--white);
-  border: 2.5px solid var(--dark); border-radius: 14px;
-  cursor: pointer; font-size: 14px; font-weight: 700; color: var(--dark);
-  box-shadow: 3px 3px 0 var(--dark);
+  display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+  background: var(--white); border: 2.5px solid var(--dark); border-radius: 14px;
+  cursor: pointer; font-size: 13px; font-weight: 700; color: var(--dark);
+  box-shadow: 3px 3px 0 var(--dark); line-height: 1.4;
   transition: transform 0.12s, box-shadow 0.12s, background 0.15s, border-color 0.15s;
   animation: slideIn 0.3s cubic-bezier(.34,1.3,.64,1) backwards;
 }
@@ -208,133 +439,220 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
 .option:nth-child(2) { animation-delay: 0.10s; }
 .option:nth-child(3) { animation-delay: 0.15s; }
 .option:nth-child(4) { animation-delay: 0.20s; }
- 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-14px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
- 
-.option:hover {
-  transform: translate(-2px,-2px);
-  box-shadow: 5px 5px 0 var(--blue);
-  border-color: var(--blue); background: #F0F3FF;
-}
+@keyframes slideIn { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: translateX(0); } }
+.option:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--blue); border-color: var(--blue); background: #F0F3FF; }
 .option-letter {
-  width: 30px; height: 30px; border-radius: 9px;
-  background: var(--off); border: 2px solid var(--dark);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 800; flex-shrink: 0;
-  font-family: 'Righteous', cursive;
+  width: 30px; height: 30px; border-radius: 9px; background: var(--off);
+  border: 2px solid var(--dark); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0; font-family: 'Righteous', cursive;
   transition: background 0.15s, border-color 0.15s;
 }
-.option.correct {
-  background: #EAFFDA; border-color: #3DB838;
-  box-shadow: 3px 3px 0 #3DB838; transform: none;
-}
+.option.correct { background: #EAFFDA; border-color: #3DB838; box-shadow: 3px 3px 0 #3DB838; transform: none; }
 .option.correct .option-letter { background: #3DB838; border-color: #3DB838; color: white; }
-.option.wrong {
-  background: #FFEAEA; border-color: var(--pink);
-  box-shadow: 3px 3px 0 var(--pink); transform: none;
-}
+.option.wrong { background: #FFEAEA; border-color: var(--pink); box-shadow: 3px 3px 0 var(--pink); transform: none; }
 .option.wrong .option-letter { background: var(--pink); border-color: var(--pink); color: white; }
  
 .expl-box {
-  display: none; margin-top: 16px;
-  background: #FFFBE6; border: 2.5px solid var(--orange);
-  border-radius: 14px; padding: 13px 16px;
-  font-size: 13px; font-weight: 600; color: #6B4500;
-  text-align: left; line-height: 1.6;
+  display: none; margin-top: 16px; background: #FFFBE6;
+  border: 2.5px solid var(--orange); border-radius: 14px; padding: 13px 16px;
+  font-size: 13px; font-weight: 600; color: #6B4500; text-align: left; line-height: 1.6;
   box-shadow: 3px 3px 0 var(--orange);
 }
 .expl-box.show { display: block; animation: popIn 0.3s cubic-bezier(.34,1.3,.64,1); }
-.expl-tag {
-  font-family: 'Righteous', cursive; color: var(--orange);
-  font-size: 11px; letter-spacing: 1.5px;
-  text-transform: uppercase; display: block; margin-bottom: 4px;
-}
+.expl-tag { font-family: 'Righteous', cursive; color: var(--orange); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 4px; }
  
 .score-block { margin: 10px 0 18px; }
-.score-number {
-  font-family: 'Righteous', cursive; font-size: 76px;
-  color: var(--blue); line-height: 1;
-  text-shadow: 4px 4px 0 var(--dark);
-}
+.score-number { font-family: 'Righteous', cursive; font-size: 76px; color: var(--blue); line-height: 1; text-shadow: 4px 4px 0 var(--dark); }
 .score-denom { font-size: 20px; font-weight: 800; color: var(--grey); }
-.score-pct {
-  display: inline-block; margin-top: 6px;
-  font-size: 13px; font-weight: 800;
-  padding: 4px 16px; border-radius: 50px;
-  border: 2px solid var(--dark); box-shadow: 2px 2px 0 var(--dark);
-}
+.score-pct { display: inline-block; margin-top: 6px; font-size: 13px; font-weight: 800; padding: 4px 16px; border-radius: 50px; border: 2px solid var(--dark); box-shadow: 2px 2px 0 var(--dark); }
  
-.fb-box {
-  background: var(--off); border: 2.5px solid var(--dark);
-  border-radius: 16px; padding: 16px; margin: 14px 0;
-  box-shadow: 4px 4px 0 var(--dark); text-align: left;
-}
+.fb-box { background: var(--off); border: 2.5px solid var(--dark); border-radius: 16px; padding: 16px; margin: 14px 0; box-shadow: 4px 4px 0 var(--dark); text-align: left; }
 .fb-box .fb-emoji { font-size: 28px; margin-bottom: 6px; display: block; }
-.fb-box strong {
-  font-family: 'Righteous', cursive; font-size: 18px;
-  color: var(--dark); display: block; margin-bottom: 4px;
-}
+.fb-box strong { font-family: 'Righteous', cursive; font-size: 18px; color: var(--dark); display: block; margin-bottom: 4px; }
 .fb-box p { font-size: 13px; color: var(--grey); margin: 0; font-weight: 600; line-height: 1.5; }
  
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 22px 0; color: var(--grey);
-  font-size: 11px; font-weight: 800;
-  letter-spacing: 1.5px; text-transform: uppercase;
-}
-.divider::before, .divider::after {
-  content: ''; flex: 1; height: 2px;
-  background: var(--light); border-radius: 2px;
-}
+.divider { display: flex; align-items: center; gap: 12px; margin: 22px 0; color: var(--grey); font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 2px; background: var(--light); border-radius: 2px; }
  
 .rev-head { margin-bottom: 16px; }
 .rev-head .r-emoji { font-size: 28px; margin-bottom: 8px; }
 .rev-head h3 { font-family: 'Righteous', cursive; font-size: 22px; color: var(--dark); margin-bottom: 4px; }
 .rev-head p { font-size: 12px; font-weight: 600; color: var(--grey); }
  
-.sburst {
-  position: absolute; font-size: 14px;
-  pointer-events: none;
-  animation: burstAnim 750ms forwards;
-}
-@keyframes burstAnim {
-  0%   { opacity: 1; transform: translate(0,0) scale(1.3) rotate(0deg); }
-  100% { opacity: 0; transform: translate(var(--bx),var(--by)) scale(0) rotate(180deg); }
-}
+.sburst { position: absolute; font-size: 14px; pointer-events: none; animation: burstAnim 750ms forwards; }
+@keyframes burstAnim { 0%{opacity:1;transform:translate(0,0) scale(1.3) rotate(0deg)} 100%{opacity:0;transform:translate(var(--bx),var(--by)) scale(0) rotate(180deg)} }
  
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
  
-<div class="app">
+<!-- ════════════════════════
+     AD OVERLAY
+════════════════════════ -->
+<div id="adOverlay">
+  <div class="stage" id="stage">
  
-  <!-- ══ NAME ══ -->
+    <!-- START SCREEN -->
+    <div class="start-screen" id="startScreen">
+      <div class="top-blob"></div>
+      <div class="bot-blob"></div>
+      <img class="start-logo" src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
+      <div class="start-ttc">TTC <span>QUIZ</span></div>
+      <div class="start-tagline">Tushar Tuition Classes · Wardha</div>
+      <div class="start-badge">✅ Version 2.0 — Updated</div>
+      <button class="start-btn" id="startBtn">🚀 Start Now!</button>
+      <div class="start-note">🔊 Turn on sound for best experience</div>
+    </div>
+ 
+    <!-- DOTS -->
+    <div class="scene-dots" id="sceneDots" style="opacity:0;transition:opacity 0.4s;">
+      <div class="sdot on" id="d0"></div>
+      <div class="sdot" id="d1"></div>
+      <div class="sdot" id="d2"></div>
+      <div class="sdot" id="d3"></div>
+      <div class="sdot" id="d4"></div>
+    </div>
+ 
+    <canvas id="particles"></canvas>
+ 
+    <!-- S0: HEY HOOK -->
+    <div class="scene s0" id="s0">
+      <div class="dots-bg"></div>
+      <div class="hey-emoji">🎉</div>
+      <div class="hey-text">HEY!</div>
+      <div class="hey-sub">Something awesome just dropped!</div>
+      <div class="pill-row">
+        <div class="pill">✨ New</div>
+        <div class="pill">🆓 Free</div>
+        <div class="pill">⚡ Updated</div>
+      </div>
+    </div>
+ 
+    <!-- S1: COUNTDOWN -->
+    <div class="scene s1" id="s1">
+      <div class="cd-ring">
+        <div class="cd-ring-inner">
+          <div class="cd-num" id="cdNum">3</div>
+        </div>
+      </div>
+      <div class="cd-label">GET READY!</div>
+    </div>
+ 
+    <!-- S2: TITLE BLAST -->
+    <div class="scene s2" id="s2">
+      <div class="burst-bg"></div>
+      <div class="logo-ring">
+        <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
+      </div>
+      <div class="big-ttc">TTC</div>
+      <div class="big-quiz">QUIZ</div>
+      <div class="v2-tag">✅ VERSION 2.0 — UPDATED</div>
+    </div>
+ 
+    <!-- S3: FEATURES -->
+    <div class="scene s3" id="s3">
+      <div class="feat-title">✨ What's Inside?</div>
+      <div class="feat-list">
+        <div class="fcard c1">
+          <div class="ficon">📖</div>
+          <div class="finfo">
+            <div class="flabel">Subject</div>
+            <div class="fval">Mathematics</div>
+          </div>
+        </div>
+        <div class="fcard c2">
+          <div class="ficon">🎯</div>
+          <div class="finfo">
+            <div class="flabel">Challenge</div>
+            <div class="fval">20 Questions</div>
+          </div>
+          <div class="fbadge new">NEW</div>
+        </div>
+        <div class="fcard c3">
+          <div class="ficon">💡</div>
+          <div class="finfo">
+            <div class="flabel">Mode</div>
+            <div class="fval">Instant Explanations</div>
+          </div>
+          <div class="fbadge v2">V2</div>
+        </div>
+        <div class="fcard c4">
+          <div class="ficon">📤</div>
+          <div class="finfo">
+            <div class="flabel">Share</div>
+            <div class="fval">WhatsApp Your Score!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- S4: UPDATE REVEAL -->
+    <div class="scene s4" id="s4">
+      <div class="confetti-bg"></div>
+      <div class="zigzag"></div>
+      <div class="zigzag-bot"></div>
+      <div class="update-badge">🚀 BIG UPDATE</div>
+      <div class="update-headline">BIGGER<br>&amp; BETTER!</div>
+      <div class="update-items">
+        <div class="uitem"><div class="uicon">⚡</div><div class="utxt">Faster &amp; smoother than ever</div></div>
+        <div class="uitem"><div class="uicon">🏆</div><div class="utxt">Scored + full explanations</div></div>
+        <div class="uitem"><div class="uicon">💬</div><div class="utxt">Share results on WhatsApp</div></div>
+      </div>
+    </div>
+ 
+    <!-- S5: CTA -->
+    <div class="scene s5" id="s5">
+      <div class="top-wave"></div>
+      <div class="stars-row">
+        <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+      </div>
+      <div class="cta-logo-wrap">
+        <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
+      </div>
+      <div class="cta-main-title">TTC <span>QUIZ</span></div>
+      <div class="cta-subtitle">is here! 🎉</div>
+      <div class="tag-row">
+        <div class="tag t1">Free</div>
+        <div class="tag t2">Instant</div>
+        <div class="tag t3">Fun!</div>
+      </div>
+      <button class="play-btn" onclick="launchQuiz()">▶ Play Now!</button>
+      <div class="cta-tagline">Tushar Tuition Classes · Wardha</div>
+    </div>
+ 
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+    <button class="replay-btn" id="replayBtn" onclick="startAd()">↺ Replay</button>
+  </div>
+</div>
+ 
+<!-- ════════════════════════
+     QUIZ APP
+════════════════════════ -->
+<div class="app" id="quizApp">
+ 
+  <!-- NAME SCREEN -->
   <div id="nameScreen" class="screen active">
     <div class="card" style="display:flex;flex-direction:column;align-items:center;">
-      <img src="https://i.ibb.co/dsBdtCwK/Ttc-logo.png" class="logo" alt="TTC">
+      <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" class="logo" alt="TTC">
       <div class="chip">✦ TTC Wardha</div>
       <h2>Hey there!<br>What's your name?</h2>
       <p class="sub">Enter your name to start the quiz 🎯</p>
-      <input id="username" class="input-field" type="text"
-        placeholder="Your full name..." autocomplete="off">
+      <input id="username" class="input-field" type="text" placeholder="Your full name..." autocomplete="off">
       <button class="btn btn-blue" onclick="startWelcome()">Continue →</button>
     </div>
   </div>
  
-  <!-- ══ WELCOME ══ -->
+  <!-- WELCOME SCREEN -->
   <div id="welcomeScreen" class="screen">
     <div class="card">
-      <img src="https://i.ibb.co/dsBdtCwK/Ttc-logo.png" class="logo" alt="TTC">
+      <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" class="logo" alt="TTC">
       <div class="chip">✦ You're up!</div>
       <h2 id="welcomeText"></h2>
       <p class="sub">Ready to prove yourself? 💪</p>
       <div class="info-strip">
-        <div class="info-pill">📝 English – Grammar</div>
-        <div class="info-pill">40 Questions</div>
+        <div class="info-pill">📖 Maths – Definitions</div>
+        <div class="info-pill">20 Questions</div>
         <div class="info-pill">🏆 Scored</div>
         <div class="info-pill">⏱ Self-paced</div>
       </div>
@@ -342,586 +660,441 @@ p.sub { font-size: 14px; color: var(--grey); font-weight: 500; margin-bottom: 20
     </div>
   </div>
  
-  <!-- ══ QUIZ ══ -->
+  <!-- QUIZ SCREEN -->
   <div id="quizScreen" class="screen">
     <div class="card">
-      <img src="https://i.ibb.co/dsBdtCwK/Ttc-logo.png" class="logo" alt="TTC">
- 
+      <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" class="logo" alt="TTC">
       <div class="progress-wrap">
         <div class="progress-meta">
-          <span id="qCounter">Q 1 / 40</span>
+          <span id="qCounter">Q 1 / 20</span>
           <span id="qScore">Score: 0</span>
         </div>
         <div class="progress-track">
           <div class="progress-fill" id="progressBar"></div>
         </div>
       </div>
- 
       <p class="question-text" id="question"></p>
       <div class="options-grid" id="options"></div>
- 
       <div class="expl-box" id="explBox">
         <span class="expl-tag">💡 Explanation</span>
         <span id="explText"></span>
       </div>
- 
       <br>
-      <button id="nextBtn" class="btn btn-blue hidden" onclick="nextQuestion()">
-        Next Question →
-      </button>
+      <button id="nextBtn" class="btn btn-blue hidden" onclick="nextQuestion()">Next Question →</button>
     </div>
   </div>
  
-  <!-- ══ RESULT ══ -->
+  <!-- RESULT SCREEN -->
   <div id="resultScreen" class="screen">
     <div class="card">
-      <img src="https://i.ibb.co/dsBdtCwK/Ttc-logo.png" class="logo" alt="TTC">
+      <img src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" class="logo" alt="TTC">
       <div class="chip" id="resultChip">✦ Quiz Done!</div>
- 
       <div class="score-block">
         <div>
           <span class="score-number" id="scoreNum">0</span>
-          <span class="score-denom" id="scoreDenom">/40</span>
+          <span class="score-denom" id="scoreDenom">/20</span>
         </div>
         <div class="score-pct" id="scorePct">0%</div>
       </div>
- 
       <div class="fb-box">
         <span class="fb-emoji" id="fbEmoji"></span>
         <strong id="fbTitle"></strong>
         <p id="fbMsg"></p>
       </div>
- 
-      <button class="btn btn-green"  onclick="shareWhatsApp()">📤 Share on WhatsApp</button>
+      <button class="btn btn-green" onclick="shareWhatsApp()">📤 Share on WhatsApp</button>
       <button id="ratingBtn" class="btn btn-pink">⭐ Rate Us on Google</button>
-      <button class="btn btn-ghost"  onclick="restartQuiz()">↺ Try Again</button>
- 
+      <button class="btn btn-ghost" onclick="restartQuiz()">↺ Try Again</button>
       <div class="divider">What others say</div>
- 
       <div class="rev-head">
         <div class="r-emoji">🌟</div>
         <h3>Loved by TTC Families</h3>
         <p>Real reviews from students &amp; parents across Wardha</p>
       </div>
- 
-      <a href="https://g.page/r/CdUkswJ0ZulAEBE/review" target="_blank"
-        class="btn btn-lime" style="display:block;text-align:center;">
-        ✍️ Give Us a Review
-      </a>
- 
+      <a href="https://g.page/r/CdUkswJ0ZulAEBE/review" target="_blank" class="btn btn-lime" style="display:block;text-align:center;">✍️ Give Us a Review</a>
       <div style="margin-top:20px;">
-        <div class="famewall-embed"
-          data-src="https---maps-app-goo-gl-CCkEWRVgjbvHpQmLA"
-          data-format="grid"
-          style="width:100%;min-height:300px;">
-        </div>
+        <div class="famewall-embed" data-src="https---maps-app-goo-gl-CCkEWRVgjbvHpQmLA" data-format="grid" style="width:100%;min-height:300px;"></div>
         <script type="text/javascript" src="https://embed.famewall.io/frame.js" defer></script>
       </div>
- 
     </div>
   </div>
  
 </div>
  
 <script>
-const subjectName = "English"
-const chapterName = "Grammar"
+/* ════════════════════════
+   AD ENGINE
+════════════════════════ */
+let audioCtx = null;
+function ac() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq, type, dur, vol=0.25, delay=0) {
+  const ctx=ac(), o=ctx.createOscillator(), g=ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type=type; o.frequency.setValueAtTime(freq, ctx.currentTime+delay);
+  g.gain.setValueAtTime(vol, ctx.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+dur);
+  o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+dur);
+}
+function noise(dur, vol=0.1, delay=0) {
+  const ctx=ac(), buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+  const src=ctx.createBufferSource(), g=ctx.createGain();
+  src.buffer=buf; src.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(vol, ctx.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+dur);
+  src.start(ctx.currentTime+delay);
+}
+function sndHey()    { tone(880,'sine',0.15,0.3); tone(1100,'sine',0.12,0.2,0.15); noise(0.08,0.06); }
+function sndBeep(n)  { const f=[0,1200,900,660][n]||880; tone(f,'square',0.1,0.3); noise(0.04,0.04); }
+function sndBlast()  { tone(100,'sawtooth',0.35,0.35); tone(200,'sawtooth',0.25,0.25,0.03); noise(0.2,0.18); }
+function sndWhoosh() { const ctx=ac(),o=ctx.createOscillator(),g=ctx.createGain(); o.connect(g);g.connect(ctx.destination); o.type='sawtooth'; o.frequency.setValueAtTime(1000,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(100,ctx.currentTime+0.3); g.gain.setValueAtTime(0.2,ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3); o.start(); o.stop(ctx.currentTime+0.3); }
+function sndTick()   { tone(1400,'square',0.04,0.2); }
+function sndVictory(){ [523,659,784,1047,1319].forEach((f,i)=>tone(f,'sine',0.2,0.22,i*0.09)); noise(0.12,0.04,0.3); }
+function sndPop()    { tone(600,'sine',0.08,0.25); tone(900,'sine',0.06,0.2,0.06); }
  
-const quizData = [
-  {
-    question: "Complete the sentence: I heard the news about the flood ___ television.",
-    options: ["in", "on", "with", "by"],
-    correct: "on",
-    explanation: "We use \"on\" for electronic media like television and radio, not \"in\"."
-  },
-  {
-    question: "Choose the correct preposition: The boy dived ___ the pool.",
-    options: ["in", "from", "into", "at"],
-    correct: "into",
-    explanation: "\"Into\" indicates movement toward the inside of something, which is appropriate for diving."
-  },
-  {
-    question: "Identify the correct preposition: ___ Nitin, everyone apart from Sanjay enjoyed the play.",
-    options: ["Because of", "According to", "Ahead of", "Along with"],
-    correct: "According to",
-    explanation: "The sentence requires a compound preposition that means \"as stated by\", which is \"According to\"."
-  },
-  {
-    question: "Complete the sentence: I have brought muffins ___ fruit and lemonade.",
-    options: ["because of", "in front of", "in addition to", "apart from"],
-    correct: "in addition to",
-    explanation: "The context implies bringing extra items, so \"in addition to\" is the correct compound preposition."
-  },
-  {
-    question: "Choose the correct preposition: The thief crept in through the window late ___ night.",
-    options: ["in", "at", "by", "on"],
-    correct: "at",
-    explanation: "While we say \"in the morning\", the correct prepositional phrase for nighttime is \"at night\"."
-  },
-  {
-    question: "Complete the sentence: We entered the cinema ___ the climax.",
-    options: ["at the point of", "ahead of", "because of", "along with"],
-    correct: "at the point of",
-    explanation: "The sentence refers to a specific moment in time during an event, making \"at the point of\" the correct choice."
-  },
-  {
-    question: "Choose the correct preposition: You have to complete these sums ___ an hour.",
-    options: ["in", "on", "at", "from"],
-    correct: "in",
-    explanation: "\"In\" is used to specify a period of time within which something must be done."
-  },
-  {
-    question: "Complete the sentence: We won the quiz competition ___ your hard work and preparation.",
-    options: ["apart from", "according to", "because of", "different from"],
-    correct: "because of",
-    explanation: "\"Because of\" correctly indicates the reason for winning the competition."
-  },
-  {
-    question: "Complete the sentence: I enjoy chess, ___ I don't like cricket as much.",
-    options: ["and", "but", "because", "so"],
-    correct: "but",
-    explanation: "\"But\" is used to show contrast or opposite ideas between enjoying chess and not liking cricket."
-  },
-  {
-    question: "Complete the sentence: We did not get the seats we wanted ___ we reached late.",
-    options: ["though", "but", "because", "until"],
-    correct: "because",
-    explanation: "\"Because\" gives the reason for not getting the desired seats."
-  },
-  {
-    question: "Which conjunction best completes the sentence? Our dog Mili hid under the bed, ___ she is scared of loud firecrackers.",
-    options: ["because", "although", "until", "but"],
-    correct: "because",
-    explanation: "The second clause provides the reason for the dog hiding, so \"because\" is correct."
-  },
-  {
-    question: "Combine the following sentences correctly: \"Bananas are tasty. Bananas are nutritious.\"",
-    options: [
-      "Bananas are not only tasty but also nutritious.",
-      "Bananas are neither tasty nor nutritious.",
-      "Bananas are tasty though nutritious.",
-      "Bananas are not only tasty and also nutritious."
-    ],
-    correct: "Bananas are not only tasty but also nutritious.",
-    explanation: "The conjunction pair \"not only ... but also\" is used to combine two complementary qualities."
-  },
-  {
-    question: "Complete the sentence: I ate bitter gourd for lunch ___ I dislike it.",
-    options: ["as", "because", "although", "since"],
-    correct: "although",
-    explanation: "\"Although\" shows a fact that makes another fact look surprising (eating something despite disliking it)."
-  },
-  {
-    question: "Complete the sentence: I will be sleepy by this evening ___ I woke up very early.",
-    options: ["but", "though", "because", "until"],
-    correct: "because",
-    explanation: "\"Because\" provides the reason for why the person will be sleepy."
-  },
-  {
-    question: "Complete the sentence correctly: Vijay ___ speaks Spanish but also German.",
-    options: ["both", "not only", "although", "nonetheless"],
-    correct: "not only",
-    explanation: "The presence of \"but also\" later in the sentence requires its pair \"not only\"."
-  },
-  {
-    question: "Complete the sentence: ___ my friend comes, I am not going to cut my birthday cake.",
-    options: ["Since", "Until", "Because", "Though"],
-    correct: "Until",
-    explanation: "\"Until\" shows time, indicating an action won't happen before a specific event."
-  },
-  {
-    question: "Choose the correct conjunction: I dislike apples. ___, I ate the apple pie that my mother baked.",
-    options: ["Since", "Because", "Nonetheless", "Until"],
-    correct: "Nonetheless",
-    explanation: "\"Nonetheless\" introduces a contrasting action performed despite the previous statement."
-  },
-  {
-    question: "Complete the sentence: You can butter the bread ___ I slice the apples.",
-    options: ["because", "while", "until", "though"],
-    correct: "while",
-    explanation: "\"While\" is used to indicate two actions happening simultaneously during a period of time."
-  },
-  {
-    question: "Join these sentences: \"It was very hot. We were thirsty.\"",
-    options: [
-      "It was very hot because we were thirsty.",
-      "It was very hot, so we were thirsty.",
-      "Although it was very hot, we were thirsty.",
-      "It was very hot until we were thirsty."
-    ],
-    correct: "It was very hot, so we were thirsty.",
-    explanation: "\"So\" is used to show the result or consequence of the first statement."
-  },
-  {
-    question: "Join these sentences: \"We stopped at a hotel. It was late at night.\"",
-    options: [
-      "We stopped at a hotel though it was late at night.",
-      "We stopped at a hotel because it was late at night.",
-      "We stopped at a hotel until it was late at night.",
-      "We stopped at a hotel, so it was late at night."
-    ],
-    correct: "We stopped at a hotel because it was late at night.",
-    explanation: "\"Because\" correctly connects the action with its underlying reason."
-  },
-  {
-    question: "Which conjunction gives us a reason?",
-    options: ["and", "but", "because", "or"],
-    correct: "because",
-    explanation: "The conjunction \"because\" is explicitly used to give us a reason."
-  },
-  {
-    question: "Which conjunction shows addition of two things?",
-    options: ["and", "or", "but", "though"],
-    correct: "and",
-    explanation: "\"And\" shows the addition of two things."
-  },
-  {
-    question: "Which pair of conjunctions mean \"in spite of\"?",
-    options: ["and / or", "though / although", "since / until", "because / so"],
-    correct: "though / although",
-    explanation: "Both \"though\" and \"although\" mean in spite of, showing a fact that makes another fact look surprising."
-  },
-  {
-    question: "What is the correct indirect speech? Zeehan says, 'Ice cream tastes good in summer.'",
-    options: [
-      "Zeehan said that ice cream tasted good in summer.",
-      "Zeehan says that ice cream tasted good in summer.",
-      "Zeehan says that ice cream tastes good in summer.",
-      "Zeehan said that ice cream tastes good in summer."
-    ],
-    correct: "Zeehan says that ice cream tastes good in summer.",
-    explanation: "If the reporting verb is in the present tense (\"says\"), the tense inside the reported speech does not change."
-  },
-  {
-    question: "What is the correct indirect speech? The children say, 'School is fun.'",
-    options: [
-      "The children said that school was fun.",
-      "The children say that school is fun.",
-      "The children say that school was fun.",
-      "The children said that school is fun."
-    ],
-    correct: "The children say that school is fun.",
-    explanation: "Because the reporting verb \"say\" is in the present tense, the verb \"is\" remains unchanged in indirect speech."
-  },
-  {
-    question: "What is the correct indirect speech? Meera says, 'I like to play tennis.'",
-    options: [
-      "Meera says that she like to play tennis.",
-      "Meera said that she liked to play tennis.",
-      "Meera says that she likes to play tennis.",
-      "Meera said that she likes to play tennis."
-    ],
-    correct: "Meera says that she likes to play tennis.",
-    explanation: "The reporting verb is \"says\", so the tense doesn't change, but \"I\" changes to \"she\" and \"like\" becomes \"likes\" for subject-verb agreement."
-  },
-  {
-    question: "What is the correct indirect speech? I said, 'We have a bath every morning.'",
-    options: [
-      "I said that they had a bath every morning.",
-      "I said that we have a bath every morning.",
-      "I said that we had a bath every morning.",
-      "I said that they have a bath every morning."
-    ],
-    correct: "I said that we have a bath every morning.",
-    explanation: "A specific rule states that if the speaker is \"I\", the pronoun \"we\" does not change in indirect speech."
-  },
-  {
-    question: "What is the correct indirect speech? Sahil says, 'I draw cartoons on the board every Sunday.'",
-    options: [
-      "Sahil said that he drew cartoons on the board every Sunday.",
-      "Sahil says that he draw cartoons on the board every Sunday.",
-      "Sahil says that he draws cartoons on the board every Sunday.",
-      "Sahil says that I draw cartoons on the board every Sunday."
-    ],
-    correct: "Sahil says that he draws cartoons on the board every Sunday.",
-    explanation: "The reporting verb is present (\"says\"), so the tense remains present, but \"I draw\" becomes \"he draws\" to match the new pronoun."
-  },
-  {
-    question: "What is the correct indirect speech? Mohit said, 'Lucknow gets very hot in summer.'",
-    options: [
-      "Mohit said that Lucknow gets very hot in summer.",
-      "Mohit said that Lucknow got very hot in summer.",
-      "Mohit says that Lucknow got very hot in summer.",
-      "Mohit said that Lucknow is getting very hot in summer."
-    ],
-    correct: "Mohit said that Lucknow got very hot in summer.",
-    explanation: "Since the reporting verb \"said\" is past tense, the verb inside the reported speech changes to past tense (\"got\")."
-  },
-  {
-    question: "What is the correct indirect speech? The teacher said, 'The earth is round.'",
-    options: [
-      "The teacher said that the earth was round.",
-      "The teacher said that the earth is round.",
-      "The teacher says that the earth was round.",
-      "The teacher said that the earth had been round."
-    ],
-    correct: "The teacher said that the earth is round.",
-    explanation: "Universal truths or scientific facts do not change tense in indirect speech, even if the reporting verb is in the past tense."
-  },
-  {
-    question: "What is the correct indirect speech? Upasna says, 'I like cartoon films.'",
-    options: [
-      "Upasna said that she liked cartoon films.",
-      "Upasna says that she likes cartoon films.",
-      "Upasna says that she like cartoon films.",
-      "Upasna said that she likes cartoon films."
-    ],
-    correct: "Upasna says that she likes cartoon films.",
-    explanation: "The reporting verb \"says\" means the tense doesn't change, but \"I\" becomes \"she\" and the verb becomes \"likes\"."
-  },
-  {
-    question: "What is the correct indirect speech? 'I polish my shoes every day,' says Rohit.",
-    options: [
-      "Rohit said that he polished his shoes every day.",
-      "Rohit says that he polish his shoes every day.",
-      "Rohit says that he polishes his shoes every day.",
-      "Rohit said that he polishes his shoes every day."
-    ],
-    correct: "Rohit says that he polishes his shoes every day.",
-    explanation: "With \"says\", the tense stays in the present, but \"I polish\" changes to \"he polishes\"."
-  },
-  {
-    question: "Fill in the blank: In indirect speech, the pronouns change as per the ___ of the speaker.",
-    options: ["tense", "gender", "mood", "verb"],
-    correct: "gender",
-    explanation: "When converting to indirect speech, pronouns change according to the gender of the speaker."
-  },
-  {
-    question: "What is the full form of TTC?",
-    options: ["Tushar Tuition Center", "Technical Training Classes", "Tushar Tuition Classes", "Teacher Training Center"],
-    correct: "Tushar Tuition Classes",
-    explanation: "TTC bole to Tushar Tuition Classes."
-  },
-  {
-    question: "Which punctuation mark shows ownership and missing letters in contractions?",
-    options: ["Comma", "Apostrophe", "Full stop", "Quotation mark"],
-    correct: "Apostrophe",
-    explanation: "An apostrophe is used specifically to show ownership and to replace missing letters in contractions."
-  },
-  {
-    question: "Which of the following book titles is capitalized correctly?",
-    options: [
-      "The tales of beedle the bard",
-      "The Tales Of Beedle The Bard",
-      "The Tales of Beedle the Bard",
-      "The Tales Of beedle The bard"
-    ],
-    correct: "The Tales of Beedle the Bard",
-    explanation: "Major words in a title are capitalized, but short prepositions or articles (like \"of\" and \"the\") are not capitalized unless they are the first or last word."
-  },
-  {
-    question: "Choose the correctly punctuated sentence.",
-    options: [
-      "'Peter pan is a very interesting character,' said mandy.",
-      "'Peter Pan is a very interesting character,' said Mandy.",
-      "'Peter Pan is a very interesting character' said Mandy.",
-      "\"Peter Pan is a very interesting character,\" said mandy."
-    ],
-    correct: "'Peter Pan is a very interesting character,' said Mandy.",
-    explanation: "Proper nouns must be capitalized, spoken words go in quotation marks, and a comma is needed before the closing mark when followed by a speech tag."
-  },
-  {
-    question: "Choose the correctly punctuated sentence.",
-    options: [
-      "'The room needs to be cleaned' her mother said to her.",
-      "'The room needs to be cleaned,' her mother said to her.",
-      "The room needs to be cleaned, her mother said to her.",
-      "'the room needs to be cleaned,' her mother said to her."
-    ],
-    correct: "'The room needs to be cleaned,' her mother said to her.",
-    explanation: "Direct speech requires quotation marks, a comma to separate the quote from the reporting clause, and a capital letter at the start."
-  },
-  {
-    question: "Choose the correctly punctuated sentence.",
-    options: [
-      "Wow that was a really good film.",
-      "Wow! That was a really good film.",
-      "Wow, that was a really good film?",
-      "Wow! that was a really good film."
-    ],
-    correct: "Wow! That was a really good film.",
-    explanation: "\"Wow\" expresses strong feeling and should be followed by an exclamation mark. The next word must begin with a capital letter."
-  },
-  {
-    question: "Choose the correctly punctuated sentence.",
-    options: [
-      "Pipal, neem, banyan and teak are some trees found in this forest.",
-      "Pipal neem banyan and teak are some trees found in this forest.",
-      "Pipal, neem, banyan, and teak, are some trees found in this forest.",
-      "pipal, neem, banyan and teak are some trees found in this forest."
-    ],
-    correct: "Pipal, neem, banyan and teak are some trees found in this forest.",
-    explanation: "Commas separate items in a list, and the first letter of the sentence must be capitalized."
+// Particles
+const cvs=document.getElementById('particles'), cx=cvs.getContext('2d');
+cvs.width=360; cvs.height=640;
+let pts=[];
+const FUN_COLORS=['#E8522A','#FFD93D','#4CC9F0','#06D6A0','#FF6B9D','#A78BFA','#fff'];
+function burst(x,y,n=70,colors=FUN_COLORS){
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2, sp=3+Math.random()*9;
+    pts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4,life:1,decay:0.018+Math.random()*0.025,size:4+Math.random()*7,color:colors[Math.floor(Math.random()*colors.length)],shape:Math.random()>.4?'rect':'circle',rot:Math.random()*Math.PI*2,rotV:(Math.random()-.5)*0.3});
   }
-]
+}
+function confettiRain(n=80,delay=0){
+  setTimeout(()=>{
+    for(let i=0;i<n;i++){
+      pts.push({x:Math.random()*370,y:-10-Math.random()*60,vx:(Math.random()-.5)*2.5,vy:3+Math.random()*5,life:1,decay:0.006+Math.random()*0.008,size:6+Math.random()*8,color:FUN_COLORS[Math.floor(Math.random()*FUN_COLORS.length)],shape:Math.random()>.4?'rect':'circle',rot:Math.random()*Math.PI*2,rotV:(Math.random()-.5)*0.15,wobble:Math.random()*Math.PI*2,wobbleSpeed:0.05+Math.random()*0.05});
+    }
+  }, delay);
+}
+function sparks(x,y){ for(let i=0;i<15;i++){ const a=Math.random()*Math.PI*2,sp=2+Math.random()*5; pts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,decay:0.06,size:2+Math.random()*3,color:'#FFD93D',shape:'circle',rot:0,rotV:0}); } }
+function tickPts(){
+  cx.clearRect(0,0,360,640);
+  pts=pts.filter(p=>p.life>0);
+  pts.forEach(p=>{
+    if(p.wobble!==undefined){ p.wobble+=p.wobbleSpeed; p.vx+=Math.sin(p.wobble)*0.08; }
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.2; p.vx*=0.97; p.life-=p.decay; p.rot+=p.rotV;
+    cx.save(); cx.globalAlpha=Math.max(0,p.life); cx.fillStyle=p.color;
+    if(p.shape==='rect'){ cx.translate(p.x,p.y); cx.rotate(p.rot); cx.fillRect(-p.size/2,-p.size/2,p.size,p.size); }
+    else { cx.beginPath(); cx.arc(p.x,p.y,p.size/2,0,Math.PI*2); cx.fill(); }
+    cx.restore();
+  });
+  requestAnimationFrame(tickPts);
+}
+tickPts();
  
-let username = localStorage.getItem("ttc_name") || ""
-let questions = [], index = 0, score = 0
-const letters = ["A","B","C","D"]
+const TOTAL_SCENES=6, DURATIONS=[1500,1300,1800,2600,2200,4000];
+const TOTAL_DUR=DURATIONS.reduce((a,b)=>a+b,0);
+let cur=0, mainT=null, cdInt=null, progRaf=null, progT0=null, going=false;
+const stageEl=document.getElementById('stage'), pFill=document.getElementById('progFill'), replayB=document.getElementById('replayBtn');
  
-if (username) document.getElementById("username").value = username
+function shake(){ stageEl.style.animation='screenShake 0.25s ease'; setTimeout(()=>stageEl.style.animation='',280); }
+function setDot(n){ for(let i=0;i<TOTAL_SCENES-1;i++){ const d=document.getElementById('d'+i); if(d) d.classList.toggle('on',i===n); } }
  
-document.getElementById("username").addEventListener("keydown", e => {
-  if (e.key === "Enter") startWelcome()
-})
- 
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5) }
- 
-function show(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"))
-  const el = document.getElementById(id)
-  el.classList.remove("active")
-  void el.offsetWidth
-  el.classList.add("active")
+function goScene(n){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  const s=document.getElementById('s'+n);
+  if(s){ void s.offsetWidth; s.classList.add('active'); }
+  setDot(n);
+  if(n===0){ sndHey(); }
+  if(n===1){ sndBeep(3); runCountdown(); }
+  if(n===2){ sndBlast(); shake(); burst(180,320,90); setTimeout(()=>sndPop(),350); }
+  if(n===3){ sndWhoosh(); [150,300,450,600].forEach(d=>setTimeout(sndTick,d)); }
+  if(n===4){ shake(); sndPop(); setTimeout(sndPop,120); burst(180,220,60,['#fff','#FFD93D','rgba(255,255,255,.6)']); }
+  if(n===5){ sndVictory(); confettiRain(55); burst(60,200,50); burst(300,150,50); }
 }
  
-function startWelcome() {
-  username = document.getElementById("username").value.trim()
-  if (!username) {
-    const inp = document.getElementById("username")
-    inp.style.borderColor = "var(--pink)"
-    inp.style.boxShadow = "3px 3px 0 var(--pink)"
-    inp.placeholder = "Please enter your name! 👆"
-    inp.focus()
-    return
+let cdN=3;
+function runCountdown(){
+  clearInterval(cdInt); cdN=3;
+  const el=document.getElementById('cdNum');
+  el.textContent=3; sparks(180,300);
+  cdInt=setInterval(()=>{
+    cdN--;
+    if(cdN<=0){ clearInterval(cdInt); el.textContent=1; sndBeep(1); return; }
+    el.textContent=cdN; sndBeep(cdN); sparks(180,300);
+    el.style.animation=''; void el.offsetWidth;
+  },400);
+}
+ 
+function schedNext(){
+  if(!going) return;
+  mainT=setTimeout(()=>{
+    cur++;
+    if(cur<TOTAL_SCENES){ goScene(cur); schedNext(); }
+    else { going=false; replayB.classList.add('show'); }
+  }, DURATIONS[cur]);
+}
+ 
+function animProg(){
+  progT0=performance.now();
+  function step(now){ const pct=Math.min(((now-progT0)/TOTAL_DUR)*100,100); pFill.style.width=pct+'%'; if(pct<100&&going) progRaf=requestAnimationFrame(step); }
+  progRaf=requestAnimationFrame(step);
+}
+ 
+function startAd(){
+  cur=0; going=true;
+  clearTimeout(mainT); clearInterval(cdInt); cancelAnimationFrame(progRaf);
+  pFill.style.width='0%'; replayB.classList.remove('show');
+  goScene(0); schedNext(); animProg();
+}
+ 
+// Launch quiz — fade out ad, show quiz
+function launchQuiz(){
+  const overlay=document.getElementById('adOverlay');
+  overlay.style.opacity='0';
+  setTimeout(()=>{
+    overlay.style.display='none';
+    const quizApp=document.getElementById('quizApp');
+    quizApp.style.display='block';
+    void quizApp.offsetWidth;
+    const saved=localStorage.getItem('ttc_name');
+    if(saved) document.getElementById('username').value=saved;
+  }, 600);
+}
+ 
+// Start button
+document.getElementById('startBtn').addEventListener('click',()=>{
+  const ss=document.getElementById('startScreen'), dots=document.getElementById('sceneDots');
+  ss.classList.add('hide');
+  setTimeout(()=>{ ss.style.display='none'; dots.style.opacity='1'; }, 400);
+  startAd();
+});
+ 
+/* ════════════════════════
+   QUIZ ENGINE
+════════════════════════ */
+const subjectName="Maths", chapterName="Definitions";
+const quizData=[
+  {
+    question:"What is the full form of TTC?",
+    options:["The Tuition Centre","Tushar Tuition Classes","Total Time Calculated","Tushar Training Centre"],
+    correct:"Tushar Tuition Classes",
+    explanation:"TTC stands for Tushar Tuition Classes!"
+  },
+  {
+    question:"Fill in the blank: A collection of information in the form of numerical figures is called _____.",
+    options:["Graph","Data","Picture","Equation"],
+    correct:"Data",
+    explanation:"Think of data as a basket full of number facts! When we gather numbers to learn something, like the ages of everyone in your class or the scores from a math test, we call that collection 'data'."
+  },
+  {
+    question:"Which of the following uses symbols or pictures to show data?",
+    options:["Bar graph","Tally marks","Pictograph","Pie chart"],
+    correct:"Pictograph",
+    explanation:"The word itself gives a great hint! 'Picto' means picture. So, a pictograph is just a fun way of showing data using pictures or symbols instead of plain numbers."
+  },
+  {
+    question:"What do we call the amount of surface that a figure covers?",
+    options:["Perimeter","Volume","Area","Length"],
+    correct:"Area",
+    explanation:"Imagine laying a brand new rug on your bedroom floor. The amount of flat floor space that the rug completely covers is known as its area."
+  },
+  {
+    question:"Decimals which have different numbers of decimal places are called _____.",
+    options:["Like decimals","Unlike decimals","Equivalent decimals","Proper decimals"],
+    correct:"Unlike decimals",
+    explanation:"Just like apples and oranges are unlike fruits, decimals that don't match up in the number of digits after the decimal point (like 1.2 and 1.45) are called unlike decimals."
+  },
+  {
+    question:"What is the process of shifting a term from one side of an equation to the other side called?",
+    options:["Transposition","Addition","Multiplication","Substitution"],
+    correct:"Transposition",
+    explanation:"Think of an equation like a seesaw. When we move a number from one side of the 'equals' sign to the other side, we are 'transporting' its position, which in math is called transposition."
+  },
+  {
+    question:"While a fraction is used to denote an equal part of a whole, what do we call a comparison of two quantities using division?",
+    options:["Proportion","Decimal","Ratio","Equation"],
+    correct:"Ratio",
+    explanation:"A fraction is like eating 1 piece of a pizza cut into 4 slices. But if you are comparing 2 dogs to 3 cats, you are comparing two different things using division, which is called a ratio."
+  },
+  {
+    question:"An equation which states that two ratios are equivalent is called a _____.",
+    options:["Proportion","Fraction","Polygon","Quadrilateral"],
+    correct:"Proportion",
+    explanation:"When two ratios are perfectly balanced and equal to each other (like 1/2 and 2/4), the equation that links them together is called a proportion."
+  },
+  {
+    question:"A line segment joining a vertex to the midpoint of the opposite side in a triangle is known as the _____.",
+    options:["Altitude","Median","Radius","Chord"],
+    correct:"Median",
+    explanation:"The median is like a bridge that starts at one top corner (vertex) of a triangle and goes exactly to the middle (midpoint) of the side straight across from it."
+  },
+  {
+    question:"What is the perpendicular drawn from a vertex of a triangle to its opposite side called?",
+    options:["Median","Chord","Altitude","Secant"],
+    correct:"Altitude",
+    explanation:"Altitude measures how tall something is! In a triangle, it's a perfectly straight line dropping straight down from a corner to the bottom side, making a 90-degree angle."
+  },
+  {
+    question:"A simple closed figure bounded by four non-collinear line segments is called a _____.",
+    options:["Triangle","Circle","Quadrilateral","Pentagon"],
+    correct:"Quadrilateral",
+    explanation:"'Quad' means four! Any completely closed shape that has exactly four straight sides (like a square, a rectangle, or a kite) is called a quadrilateral."
+  },
+  {
+    question:"What is a line segment joining the centre of a circle to any point on the circle called?",
+    options:["Diameter","Radius","Chord","Secant"],
+    correct:"Radius",
+    explanation:"Imagine a bicycle wheel. The metal spoke that goes from the very centre dot to the outer tire is exactly what a radius is in math!"
+  },
+  {
+    question:"A line segment joining any two points on a circle is called a _____.",
+    options:["Radius","Diameter","Secant","Chord"],
+    correct:"Chord",
+    explanation:"If you pick any two random spots on the outer edge of a circle and draw a straight line connecting them, you've just drawn a chord."
+  },
+  {
+    question:"What do we call a special chord that passes directly through the centre of a circle?",
+    options:["Radius","Diameter","Secant","Arc"],
+    correct:"Diameter",
+    explanation:"A diameter is just a chord that goes right through the middle dot of the circle. Because it goes through the widest part, it is the longest chord possible and cuts the circle perfectly in half!"
+  },
+  {
+    question:"The distance around a circle is called its _____.",
+    options:["Area","Circumference","Volume","Surface"],
+    correct:"Circumference",
+    explanation:"If you were an ant walking exactly on the drawn line of a circle all the way around until you reached your starting point, the distance you walked is the circumference."
+  },
+  {
+    question:"True or False: The exterior of a circle contains all the points in the plane whose distance from the centre is less than the radius.",
+    options:["True","False"],
+    correct:"False",
+    explanation:"The exterior means the 'outside'. Points on the outside of the circle are further away from the center than the radius. Points that are closer (less than the radius) are in the 'interior' or inside!"
+  },
+  {
+    question:"A line which intersects or meets the circle at exactly two distinct points is called a _____.",
+    options:["Secant","Chord","Radius","Vertex"],
+    correct:"Secant",
+    explanation:"While a chord stops right at the edges of the circle, a secant is a continuous line that completely passes through the circle, slicing across it at two different points."
+  },
+  {
+    question:"The part of a circle enclosed by any two radii is called a _____.",
+    options:["Segment","Semicircle","Sector","Chord"],
+    correct:"Sector",
+    explanation:"Think of a sector like a delicious slice of pie or pizza! It's the area trapped between two radii (the straight cuts) and the curved edge of the crust."
+  },
+  {
+    question:"Two or more circles drawn with the same centre are called _____.",
+    options:["Intersecting circles","Concentric circles","Semicircles","Equal circles"],
+    correct:"Concentric circles",
+    explanation:"Think of a dartboard or dropping a pebble in a puddle of water. The rings get bigger and bigger but they all share the exact same center point, making them concentric circles."
+  },
+  {
+    question:"In a solid shape, what is the corner point where the faces meet called?",
+    options:["Edge","Surface","Face","Vertex"],
+    correct:"Vertex",
+    explanation:"Pick up a dice or a cardboard box. The flat sides are faces, the straight lines are edges, and the sharp, pointy corners where those lines meet are called vertices (which is the plural word for vertex)!"
   }
-  localStorage.setItem("ttc_name", username)
-  document.getElementById("welcomeText").innerText = "Let's go, " + username + "!"
-  show("welcomeScreen")
+];
+ 
+let username='', questions=[], qIndex=0, score=0;
+const letters=["A","B","C","D"];
+ 
+const savedName=localStorage.getItem("ttc_name")||"";
+if(savedName) document.getElementById("username").value=savedName;
+ 
+document.getElementById("username").addEventListener("keydown",e=>{ if(e.key==="Enter") startWelcome(); });
+ 
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const el=document.getElementById(id);
+  el.classList.remove("active"); void el.offsetWidth; el.classList.add("active");
 }
- 
-function startQuiz() {
-  questions = shuffle(quizData)
-  index = 0; score = 0
-  show("quizScreen")
-  loadQuestion()
+function startWelcome(){
+  username=document.getElementById("username").value.trim();
+  if(!username){
+    const inp=document.getElementById("username");
+    inp.style.borderColor="var(--pink)"; inp.style.boxShadow="3px 3px 0 var(--pink)";
+    inp.placeholder="Please enter your name! 👆"; inp.focus(); return;
+  }
+  localStorage.setItem("ttc_name",username);
+  document.getElementById("welcomeText").innerText="Let's go, "+username+"!";
+  showScreen("welcomeScreen");
 }
- 
-function loadQuestion() {
-  const q = questions[index]
-  const opts = shuffle([...q.options])
- 
-  document.getElementById("qCounter").innerText = `Q ${index+1} / ${questions.length}`
-  document.getElementById("qScore").innerText = `Score: ${score}`
-  document.getElementById("progressBar").style.width = ((index / questions.length) * 100) + "%"
-  document.getElementById("question").innerText = q.question
- 
-  const container = document.getElementById("options")
-  container.innerHTML = ""
-  opts.forEach((opt, i) => {
-    const div = document.createElement("div")
-    div.className = "option"
-    div.innerHTML = `<span class="option-letter">${letters[i]}</span><span class="opt-text">${opt}</span>`
-    div.onclick = () => selectOption(div, opt, q)
-    container.appendChild(div)
-  })
- 
-  document.getElementById("explBox").classList.remove("show")
-  document.getElementById("explText").innerText = ""
-  document.getElementById("nextBtn").classList.add("hidden")
+function startQuiz(){
+  questions=shuffle(quizData); qIndex=0; score=0;
+  showScreen("quizScreen"); loadQuestion();
 }
- 
-function selectOption(el, opt, q) {
-  document.querySelectorAll(".option").forEach(o => o.onclick = null)
- 
-  if (opt === q.correct) {
-    el.classList.add("correct")
-    score++
-    confetti({
-      particleCount: 100, spread: 70, origin: { y: 0.55 },
-      colors: ["#4361EE","#C8FF00","#FF3D8A","#FF6B35","#ffffff"]
-    })
+function loadQuestion(){
+  const q=questions[qIndex], opts=shuffle([...q.options]);
+  document.getElementById("qCounter").innerText=`Q ${qIndex+1} / ${questions.length}`;
+  document.getElementById("qScore").innerText=`Score: ${score}`;
+  document.getElementById("progressBar").style.width=((qIndex/questions.length)*100)+"%";
+  document.getElementById("question").innerText=q.question;
+  const container=document.getElementById("options");
+  container.innerHTML="";
+  opts.forEach((opt,i)=>{
+    const div=document.createElement("div");
+    div.className="option";
+    div.innerHTML=`<span class="option-letter">${letters[i]}</span><span class="opt-text">${opt}</span>`;
+    div.onclick=()=>selectOption(div,opt,q);
+    container.appendChild(div);
+  });
+  document.getElementById("explBox").classList.remove("show");
+  document.getElementById("explText").innerText="";
+  document.getElementById("nextBtn").classList.add("hidden");
+}
+function selectOption(el,opt,q){
+  document.querySelectorAll(".option").forEach(o=>o.onclick=null);
+  if(opt===q.correct){
+    el.classList.add("correct"); score++;
+    confetti({particleCount:100,spread:70,origin:{y:0.55},colors:["#4361EE","#C8FF00","#FF3D8A","#FF6B35","#ffffff"]});
   } else {
-    el.classList.add("wrong")
-    document.querySelectorAll(".option").forEach(o => {
-      if (o.querySelector(".opt-text")?.innerText.trim() === q.correct) o.classList.add("correct")
-    })
+    el.classList.add("wrong");
+    document.querySelectorAll(".option").forEach(o=>{ if(o.querySelector(".opt-text")?.innerText.trim()===q.correct) o.classList.add("correct"); });
   }
- 
-  document.getElementById("explText").innerText = q.explanation
-  document.getElementById("explBox").classList.add("show")
-  document.getElementById("qScore").innerText = `Score: ${score}`
-  document.getElementById("nextBtn").classList.remove("hidden")
+  document.getElementById("explText").innerText=q.explanation;
+  document.getElementById("explBox").classList.add("show");
+  document.getElementById("qScore").innerText=`Score: ${score}`;
+  document.getElementById("nextBtn").classList.remove("hidden");
 }
- 
-function nextQuestion() {
-  index++
-  if (index >= questions.length) { showResult(); return }
-  loadQuestion()
+function nextQuestion(){ qIndex++; if(qIndex>=questions.length){ showResult(); return; } loadQuestion(); }
+function showResult(){
+  showScreen("resultScreen");
+  const total=questions.length, pct=Math.round((score/total)*100);
+  document.getElementById("scoreNum").innerText=score;
+  document.getElementById("scoreDenom").innerText=`/${total}`;
+  document.getElementById("scorePct").innerText=pct+"%";
+  let emoji,title,msg,chipText,pctBg;
+  if(pct>=90){ emoji="🔥";title="Absolutely Smashed It!";pctBg="#EAFFDA";msg="Perfect! Outstanding performance, "+username+". Top of the class!";chipText="✦ Outstanding"; }
+  else if(pct>=75){ emoji="💪";title="Really Well Done!";pctBg="#E0F0FF";msg="Strong performance, "+username+"! A little more practice and you'll be perfect.";chipText="✦ Well Done"; }
+  else if(pct>=50){ emoji="📚";title="Good Effort!";pctBg="#FFF8DC";msg="You're on the right track, "+username+". Keep revising and you'll ace it!";chipText="✦ Keep Going"; }
+  else { emoji="🧐";title="Time to Revise!";pctBg="#FFEAEA";msg="Don't worry, "+username+" — go through the chapters once more and try again!";chipText="✦ Try Again"; }
+  document.getElementById("fbEmoji").innerText=emoji;
+  document.getElementById("fbTitle").innerText=title;
+  document.getElementById("fbMsg").innerText=msg;
+  document.getElementById("resultChip").innerText=chipText;
+  document.getElementById("scorePct").style.background=pctBg;
+  confetti({particleCount:180,spread:110,origin:{y:0.45},colors:["#4361EE","#C8FF00","#FF3D8A","#FF6B35","#ffffff"]});
 }
+function shareWhatsApp(){
+  const msg=`🎓 *TTC Quiz Result*\n\n👤 *Student:* ${username}\n📘 *Subject:* ${subjectName}\n📖 *Chapter:* ${chapterName}\n🏆 *Score:* ${score}/${questions.length}\n\n_Tushar Tuition Classes, Wardha_ 📚`;
+  window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+function restartQuiz(){ location.reload(); }
  
-function showResult() {
-  show("resultScreen")
-  const total = questions.length
-  const pct = Math.round((score / total) * 100)
- 
-  document.getElementById("scoreNum").innerText = score
-  document.getElementById("scoreDenom").innerText = `/${total}`
-  document.getElementById("scorePct").innerText = pct + "%"
- 
-  let emoji, title, msg, chipText, pctBg
- 
-  if (pct >= 90) {
-    emoji = "🔥"; title = "Absolutely Smashed It!"; pctBg = "#EAFFDA"
-    msg = "Perfect! Outstanding performance, " + username + ". Top of the class!"
-    chipText = "✦ Outstanding"
-  } else if (pct >= 75) {
-    emoji = "💪"; title = "Really Well Done!"; pctBg = "#E0F0FF"
-    msg = "Strong performance, " + username + "! A little more practice and you'll be perfect."
-    chipText = "✦ Well Done"
-  } else if (pct >= 50) {
-    emoji = "📚"; title = "Good Effort!"; pctBg = "#FFF8DC"
-    msg = "You're on the right track, " + username + ". Keep revising and you'll ace it!"
-    chipText = "✦ Keep Going"
-  } else {
-    emoji = "🧐"; title = "Time to Revise!"; pctBg = "#FFEAEA"
-    msg = "Don't worry, " + username + " — go through the chapters once more and try again!"
-    chipText = "✦ Try Again"
+document.getElementById("ratingBtn").addEventListener("click",function(){
+  for(let i=0;i<16;i++){
+    const s=document.createElement("span");
+    s.className="sburst";
+    s.innerText=["★","✦","●","▲"][Math.floor(Math.random()*4)];
+    s.style.color=["#C8FF00","#FF6B35","#4361EE","#FF3D8A"][Math.floor(Math.random()*4)];
+    s.style.setProperty("--bx",(Math.random()*160-80)+"px");
+    s.style.setProperty("--by",(Math.random()*-150)+"px");
+    s.style.left=(35+Math.random()*30)+"%"; s.style.top="50%";
+    this.appendChild(s); setTimeout(()=>s.remove(),750);
   }
- 
-  document.getElementById("fbEmoji").innerText = emoji
-  document.getElementById("fbTitle").innerText = title
-  document.getElementById("fbMsg").innerText = msg
-  document.getElementById("resultChip").innerText = chipText
-  document.getElementById("scorePct").style.background = pctBg
- 
-  confetti({
-    particleCount: 180, spread: 110, origin: { y: 0.45 },
-    colors: ["#4361EE","#C8FF00","#FF3D8A","#FF6B35","#ffffff"]
-  })
-}
- 
-function shareWhatsApp() {
-  const msg =
-`🎓 *TTC Quiz Result*
- 
-👤 *Student:* ${username}
-📘 *Subject:* ${subjectName}
-📖 *Chapter:* ${chapterName}
-🏆 *Score:* ${score}/${questions.length}
- 
-_Tushar Tuition Classes, Wardha_ 📚`
-  window.open("https://wa.me/?text=" + encodeURIComponent(msg))
-}
- 
-function restartQuiz() { location.reload() }
- 
-document.getElementById("ratingBtn").addEventListener("click", function () {
-  for (let i = 0; i < 16; i++) {
-    const s = document.createElement("span")
-    s.className = "sburst"
-    s.innerText = ["★","✦","●","▲"][Math.floor(Math.random()*4)]
-    s.style.color = ["#C8FF00","#FF6B35","#4361EE","#FF3D8A"][Math.floor(Math.random()*4)]
-    s.style.setProperty("--bx", (Math.random()*160-80)+"px")
-    s.style.setProperty("--by", (Math.random()*-150)+"px")
-    s.style.left = (35 + Math.random()*30) + "%"
-    s.style.top = "50%"
-    this.appendChild(s)
-    setTimeout(() => s.remove(), 750)
-  }
-  setTimeout(() => window.open("https://g.page/r/CdUkswJ0ZulAEBE/review"), 320)
-})
+  setTimeout(()=>window.open("https://g.page/r/CdUkswJ0ZulAEBE/review"),320);
+});
 </script>
- 
 </body>
 </html>
